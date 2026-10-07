@@ -55,6 +55,11 @@ class ServantApiController
         apiSuccess(['id' => $id], __('messages.servant_updated'));
     }
 
+    /* ============================================================
+       DELETE — نسخة واحدة فقط
+       - إن كان للخادم سجل حضور → تعطيل (soft delete)
+       - إن لم يكن → حذف فعلي
+    ============================================================ */
     public function delete(): void
     {
         apiRequirePost();
@@ -64,16 +69,59 @@ class ServantApiController
 
         $in = apiInput();
         $id = (int)($in['id'] ?? 0);
-        $old = (new Servant())->find($id);
-        if (!$old) apiError('الخادم غير موجود', [], 404);
 
-        // Soft delete = تعطيل
-        (new Servant())->update($id, ['status' => SERVANT_INACTIVE]);
-        (new AuditLog())->write((int)currentUser()['id'], 'DEACTIVATE_SERVANT', 'servant', $id, $old, ['status' => SERVANT_INACTIVE]);
+        if (!$id) {
+            apiError('معرّف الخادم مطلوب', [], 422);
+        }
 
-        apiSuccess(null, __('messages.servant_deactivated'));
+        $servant = (new Servant())->find($id);
+        if (!$servant) {
+            apiError('الخادم غير موجود', [], 404);
+        }
+
+        // هل له سجل حضور؟
+        $hasAttendance = (int)(Database::one(
+            "SELECT COUNT(*) AS c FROM attendance WHERE servant_id = ?",
+            [$id]
+        )['c'] ?? 0);
+
+        if ($hasAttendance > 0) {
+            // Soft delete: عطّل بدل الحذف
+            (new Servant())->update($id, ['status' => SERVANT_INACTIVE]);
+
+            (new AuditLog())->write(
+                (int)currentUser()['id'],
+                'DEACTIVATE_SERVANT',
+                'servant',
+                $id,
+                $servant,
+                ['status' => SERVANT_INACTIVE]
+            );
+
+            apiSuccess(
+                ['deactivated' => true, 'records' => $hasAttendance],
+                'الخادم له سجل حضور، تم تعطيله بدلاً من حذفه'
+            );
+        } else {
+            // احذف فعلاً
+            Database::query("DELETE FROM servants WHERE id = ?", [$id]);
+
+            (new AuditLog())->write(
+                (int)currentUser()['id'],
+                'DELETE_SERVANT',
+                'servant',
+                $id,
+                $servant,
+                null
+            );
+
+            apiSuccess(['deleted' => true], 'تم حذف الخادم بنجاح');
+        }
     }
 
+    /* ============================================================
+       Helpers
+    ============================================================ */
     private function extract(array $in): array
     {
         return [

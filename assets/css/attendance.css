@@ -1,34 +1,143 @@
-/* ============ Attendance Header ============ */
-.attendance-header {
-    background: linear-gradient(135deg, var(--yellow) 0%, var(--orange) 100%);
-    border: var(--border);
-    border-radius: var(--radius);
-    padding: 20px 24px;
-    box-shadow: var(--shadow);
+/* =====================================================
+   ATTENDANCE PAGE — Modern Clean
+===================================================== */
+
+/* ============ Page Header ============ */
+.attendance-page-head {
+    margin-bottom: 24px;
+}
+
+.attendance-page-head h1 {
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--text-primary);
+    letter-spacing: -0.5px;
+    margin-bottom: 4px;
+}
+
+.attendance-page-head p {
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+/* ============ Filters Card ============ */
+.attendance-filters {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    box-shadow: var(--shadow-card);
     margin-bottom: 20px;
-    color: #0E3B34;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+    align-items: end;
 }
 
-.attendance-header h1 {
-    margin: 0 0 6px;
-    font-size: 24px;
-    font-weight: 900;
+.attendance-filters label {
+    display: grid;
+    gap: 6px;
 }
 
-.attendance-header .session-info {
-    display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
+.attendance-filters label span {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.attendance-filters select,
+.attendance-filters input[type="date"] {
+    height: 44px;
+    padding: 0 14px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color);
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    transition: all var(--transition-fast);
+}
+
+.attendance-filters select:focus,
+.attendance-filters input[type="date"]:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 15%, transparent);
+}
+
+.attendance-filters button[type="button"] {
+    height: 44px;
     font-size: 14px;
     font-weight: 700;
-    margin-top: 8px;
+    white-space: nowrap;
 }
 
-.attendance-header .session-info span {
-    background: rgba(255, 255, 255, 0.4);
-    padding: 4px 12px;
-    border-radius: 99px;
-    border: 1px solid rgba(14, 59, 52, 0.2);
+/* ============ Session Bar ============ */
+.session-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    background: linear-gradient(135deg, 
+        color-mix(in srgb, var(--primary) 12%, var(--bg-surface)) 0%,
+        color-mix(in srgb, var(--primary) 5%, var(--bg-surface)) 100%);
+    border: 1px solid color-mix(in srgb, var(--primary) 25%, var(--border-color));
+    border-radius: var(--radius-lg);
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.session-bar-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.session-bar-item .icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    background: var(--primary);
+    color: var(--primary-text);
+    display: grid;
+    place-items: center;
+    font-size: 15px;
+    flex-shrink: 0;
+}
+
+.session-bar-item .label {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.session-bar-item .label small {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.session-bar-item .label strong {
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.session-bar-divider {
+    width: 1px;
+    height: 32px;
+    background: var(--border-color);
+}
+
+@media (max-width: 640px) {
+    .session-bar-divider { display: none; }
+    .session-bar { padding: 12px 14px; }
 }
 
 /* ============ Toolbar ============ */
@@ -36,206 +145,38 @@
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
+    align-items: center;
     margin-bottom: 16px;
-    align-items: center;
 }
 
-.search-input {
-    flex: 1 1 220px;
-    min-height: 48px;
-    padding: 10px 18px;
-    border: var(--border);
+.attendance-toolbar .btn {
+    height: 42px;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 0 18px;
+}
+
+.attendance-toolbar .search-input {
+    flex: 1 1 240px;
+    height: 42px;
+    padding: 0 16px;
+    border: 1px solid var(--border-color);
     border-radius: var(--radius);
-    background: var(--card);
-    color: var(--ink);
-    font-size: 15px;
-    font-weight: 600;
-    box-shadow: var(--shadow-sm);
-    transition: var(--transition);
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    font-size: 14px;
+    font-weight: 500;
+    transition: all var(--transition-fast);
+    min-width: 0;
 }
 
-.search-input:focus {
+.attendance-toolbar .search-input:focus {
     outline: none;
-    border-color: var(--yellow);
-    box-shadow: 0 0 0 4px rgba(255, 210, 63, 0.3), var(--shadow-sm);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 15%, transparent);
 }
 
-/* ============ Attendance List ============ */
-.attendance-list {
-    display: grid;
-    gap: 12px;
-    margin-bottom: 24px;
-}
-
-.attendance-row {
-    background: var(--card);
-    border: var(--border);
-    border-radius: var(--radius);
-    padding: 16px 18px;
-    box-shadow: var(--shadow-sm);
-    display: grid;
-    gap: 12px;
-    transition: var(--transition);
-    animation: slideUp 0.3s ease-out;
-}
-
-.attendance-row:hover {
-    box-shadow: var(--shadow);
-}
-
-.attendance-row.status-present { background: linear-gradient(90deg, #E0F9E8 0%, var(--card) 100%); }
-.attendance-row.status-absent { background: linear-gradient(90deg, #FFE5E8 0%, var(--card) 100%); }
-.attendance-row.status-excused { background: linear-gradient(90deg, #FFF8DC 0%, var(--card) 100%); }
-
-.attendance-row .row-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.attendance-row .avatar {
-    width: 48px;
-    height: 48px;
-    font-size: 24px;
-    border: var(--border-soft);
-    border-radius: 50%;
-    display: grid;
-    place-items: center;
-    background: var(--yellow);
-    flex-shrink: 0;
-}
-
-.servant-name {
-    font-weight: 900;
-    font-size: 17px;
-    color: var(--ink);
-    flex: 1;
-}
-
-/* ============ Status Buttons ============ */
-.status-group {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-}
-
-.status-btn {
-    min-height: 52px;
-    border: var(--border);
-    border-radius: var(--radius-sm);
-    background: var(--card);
-    font-weight: 800;
-    font-size: 15px;
-    color: var(--ink);
-    transition: var(--transition);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    padding: 8px 12px;
-    box-shadow: var(--shadow-sm);
-}
-
-.status-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow);
-}
-
-.status-btn:active {
-    transform: translateY(2px);
-    box-shadow: none;
-}
-
-.status-btn.on.present {
-    background: linear-gradient(135deg, var(--green) 0%, #16A34A 100%);
-    color: #fff;
-    box-shadow: 3px 3px 0 #0E3B34;
-}
-
-.status-btn.on.absent {
-    background: linear-gradient(135deg, var(--red) 0%, #DC2626 100%);
-    color: #fff;
-    box-shadow: 3px 3px 0 #0E3B34;
-}
-
-.status-btn.on.excused {
-    background: linear-gradient(135deg, var(--yellow) 0%, var(--orange) 100%);
-    color: #0E3B34;
-    box-shadow: 3px 3px 0 #0E3B34;
-}
-
-/* Emojis in status buttons */
-.status-btn[data-status="present"]::before { content: '✓'; font-weight: 900; }
-.status-btn[data-status="absent"]::before  { content: '✕'; font-weight: 900; }
-.status-btn[data-status="excused"]::before { content: '⏱'; font-weight: 900; }
-
-.status-btn.on[data-status="present"]::before { content: '✓'; }
-.status-btn.on[data-status="absent"]::before  { content: '✕'; }
-.status-btn.on[data-status="excused"]::before { content: '⏱'; }
-
-/* ============ Excuse Box ============ */
-.excuse-box {
-    animation: slideDown 0.3s ease-out;
-}
-
-.excuse-box input {
-    width: 100%;
-    min-height: 46px;
-    padding: 10px 16px;
-    border: var(--border);
-    border-radius: var(--radius-sm);
-    background: #FFFEF5;
-    color: var(--ink);
-    font-size: 15px;
-    font-weight: 600;
-}
-
-.excuse-box input:focus {
-    outline: none;
-    border-color: var(--yellow);
-    box-shadow: 0 0 0 4px rgba(255, 210, 63, 0.3);
-}
-
-/* ============ Actions Bar ============ */
-.attendance-actions {
-    position: sticky;
-    bottom: 12px;
-    z-index: 10;
-    background: var(--card);
-    border: var(--border);
-    border-radius: var(--radius);
-    padding: 12px;
-    box-shadow: var(--shadow-lg);
-    margin-top: 20px;
-}
-
-.attendance-actions .btn {
-    width: 100%;
-    min-height: 54px;
-    font-size: 18px;
-    font-weight: 900;
-}
-
-.attendance-actions .btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none !important;
-}
-
-/* ============ Row Error ============ */
-.row-error {
-    border-color: var(--red) !important;
-    animation: shake 0.4s;
-}
-
-@keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-6px); }
-    75% { transform: translateX(6px); }
-}
-
-/* ============ Counter Badge ============ */
+/* ============ Counters ============ */
 .attendance-counter {
     display: flex;
     gap: 8px;
@@ -246,30 +187,317 @@
 .counter-chip {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     padding: 8px 16px;
-    background: var(--card);
-    border: var(--border);
-    border-radius: 99px;
-    font-weight: 800;
-    font-size: 14px;
+    border-radius: var(--radius-full);
+    font-weight: 700;
+    font-size: 13px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    transition: all var(--transition-fast);
+}
+
+.counter-chip b {
+    font-size: 16px;
+    font-weight: 900;
+}
+
+.counter-chip.present {
+    background: var(--success-soft);
+    border-color: color-mix(in srgb, var(--success) 40%, transparent);
+    color: var(--success-text);
+}
+
+.counter-chip.absent {
+    background: var(--danger-soft);
+    border-color: color-mix(in srgb, var(--danger) 40%, transparent);
+    color: var(--danger-text);
+}
+
+.counter-chip.excused {
+    background: var(--warning-soft);
+    border-color: color-mix(in srgb, var(--warning) 40%, transparent);
+    color: var(--warning-text);
+}
+
+/* ============ Attendance List ============ */
+.attendance-list {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 100px;
+}
+
+/* ============ Row ============ */
+.attendance-row {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 16px 18px;
+    display: grid;
+    gap: 14px;
+    transition: all var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.attendance-row::before {
+    content: '';
+    position: absolute;
+    inset-inline-start: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: var(--border-color);
+    transition: background var(--transition);
+}
+
+.attendance-row.status-present::before { background: var(--success); }
+.attendance-row.status-absent::before  { background: var(--danger); }
+.attendance-row.status-excused::before { background: var(--warning); }
+
+.attendance-row:hover {
+    border-color: var(--border-strong);
     box-shadow: var(--shadow-sm);
 }
 
-.counter-chip.present { background: var(--green); color: #fff; }
-.counter-chip.absent  { background: var(--red); color: #fff; }
-.counter-chip.excused { background: var(--yellow); color: #0E3B34; }
+.attendance-row.row-error {
+    border-color: var(--danger);
+    background: var(--danger-soft);
+}
+
+/* ============ Row Header ============ */
+.attendance-row .row-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.attendance-row .avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-full);
+    background: linear-gradient(135deg, 
+        color-mix(in srgb, var(--primary) 20%, var(--bg-subtle)) 0%,
+        color-mix(in srgb, var(--primary) 10%, var(--bg-subtle)) 100%);
+    color: var(--primary);
+    border: 1.5px solid color-mix(in srgb, var(--primary) 30%, transparent);
+    display: grid;
+    place-items: center;
+    font-weight: 900;
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.attendance-row .servant-name {
+    flex: 1;
+    min-width: 0;
+    font-weight: 800;
+    font-size: 16px;
+    color: var(--text-primary);
+    letter-spacing: -0.2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ============ Status Group ============ */
+.status-group {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+.status-btn {
+    height: 48px;
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--radius);
+    background: var(--bg-surface);
+    color: var(--text-secondary);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 0 12px;
+    user-select: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.status-btn:hover:not(.on) {
+    background: var(--bg-hover);
+    border-color: var(--border-strong);
+    color: var(--text-primary);
+}
+
+.status-btn:active {
+    transform: scale(0.97);
+}
+
+/* Active states — كل حالة بلونها */
+.status-btn.on.present {
+    background: var(--success);
+    border-color: var(--success);
+    color: #fff;
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--success) 30%, transparent);
+}
+
+.status-btn.on.absent {
+    background: var(--danger);
+    border-color: var(--danger);
+    color: #fff;
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--danger) 30%, transparent);
+}
+
+.status-btn.on.excused {
+    background: var(--warning);
+    border-color: var(--warning);
+    color: #fff;
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--warning) 30%, transparent);
+}
+
+/* الأيقونة داخل الزر */
+.status-btn .icon {
+    font-size: 16px;
+    font-weight: 900;
+    line-height: 1;
+}
+
+/* ============ Excuse Box ============ */
+.excuse-box {
+    animation: slideDown 250ms ease-out;
+    padding-top: 4px;
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.excuse-box input {
+    width: 100%;
+    height: 44px;
+    padding: 0 16px;
+    border: 1.5px solid var(--warning);
+    border-radius: var(--radius);
+    background: var(--warning-soft);
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all var(--transition-fast);
+}
+
+.excuse-box input:focus {
+    outline: none;
+    border-color: var(--warning);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--warning) 25%, transparent);
+    background: var(--bg-surface);
+}
+
+.excuse-box input::placeholder {
+    color: color-mix(in srgb, var(--warning-text) 70%, transparent);
+    font-weight: 500;
+}
+
+/* ============ Actions (Sticky Save) ============ */
+.attendance-actions {
+    position: fixed;
+    bottom: 16px;
+    inset-inline: 16px;
+    max-width: 1200px;
+    margin-inline: auto;
+    z-index: 30;
+    padding: 12px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12), 
+                0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+html[data-theme="dark"] .attendance-actions {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 
+                0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.attendance-actions .btn {
+    width: 100%;
+    height: 52px;
+    font-size: 16px;
+    font-weight: 800;
+    border-radius: var(--radius);
+}
+
+/* ============ Loading ============ */
+.attendance-loading {
+    padding: 60px 20px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 14px;
+    font-weight: 600;
+}
 
 /* ============ Responsive ============ */
 @media (max-width: 640px) {
-    .attendance-row { padding: 14px 14px; }
-    .servant-name { font-size: 16px; }
-    .status-btn { min-height: 48px; font-size: 14px; }
-    .status-btn[data-status="present"]::before,
-    .status-btn[data-status="absent"]::before,
-    .status-btn[data-status="excused"]::before {
+    .attendance-page-head h1 { font-size: 22px; }
+
+    .attendance-filters {
+        padding: 16px;
+        gap: 12px;
+    }
+
+    .session-bar {
+        gap: 8px;
+        padding: 10px 12px;
+    }
+
+    .session-bar-item .icon {
+        width: 28px;
+        height: 28px;
+        font-size: 13px;
+    }
+
+    .session-bar-item .label strong { font-size: 13px; }
+
+    .attendance-row {
+        padding: 14px;
+        gap: 12px;
+    }
+
+    .attendance-row .avatar {
+        width: 40px;
+        height: 40px;
         font-size: 16px;
     }
-    .attendance-header h1 { font-size: 20px; }
-    .counter-chip { font-size: 13px; padding: 6px 12px; }
+
+    .attendance-row .servant-name { font-size: 15px; }
+
+    .status-group { gap: 6px; }
+
+    .status-btn {
+        height: 46px;
+        font-size: 13px;
+        padding: 0 8px;
+        gap: 4px;
+    }
+
+    .status-btn .icon { font-size: 14px; }
+
+    .attendance-actions {
+        bottom: 8px;
+        inset-inline: 8px;
+    }
+
+    .counter-chip {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+
+    .counter-chip b { font-size: 14px; }
 }

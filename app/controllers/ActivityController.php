@@ -59,4 +59,51 @@ class ActivityController
         $_SESSION['_success'] = __('messages.activity_updated');
         redirect('/activities');
     }
+    
+    public function delete(): void
+{
+    apiRequirePost();
+    apiRequireLogin();
+    apiRequirePermission('activities.delete');
+    apiVerifyCsrf();
+
+    $in = apiInput();
+    $id = (int)($in['id'] ?? 0);
+
+    if (!$id) {
+        apiError('معرّف النشاط مطلوب', [], 422);
+    }
+
+    $activity = (new Activity())->find($id);
+    if (!$activity) {
+        apiError('النشاط غير موجود', [], 404);
+    }
+
+    // فحص: هل له جلسات حضور؟
+    $sessionsCount = (int)(Database::one(
+        "SELECT COUNT(*) AS c FROM attendance_sessions WHERE activity_id = ?",
+        [$id]
+    )['c'] ?? 0);
+
+    if ($sessionsCount > 0) {
+        apiError(
+            "لا يمكن حذف النشاط — له {$sessionsCount} جلسة حضور مسجلة",
+            ['sessions_count' => $sessionsCount],
+            409
+        );
+    }
+
+    Database::query("DELETE FROM activities WHERE id = ?", [$id]);
+
+    (new AuditLog())->write(
+        (int)currentUser()['id'],
+        'DELETE_ACTIVITY',
+        'activity',
+        $id,
+        $activity,
+        null
+    );
+
+    apiSuccess(null, 'تم حذف النشاط بنجاح');
+}
 }

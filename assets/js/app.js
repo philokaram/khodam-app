@@ -138,6 +138,125 @@ if ('serviceWorker' in navigator && location.protocol === 'https:') {
             .catch(err => console.warn('SW failed:', err));
     });
 }
+
+/* ============================================================
+   Confirm Modal
+============================================================ */
+function showConfirm({ title, message, extra, confirmText = 'حذف' }) {
+    return new Promise((resolve) => {
+        const modal = document.getElementById('confirmModal');
+        
+        if (!modal) {
+            // Fallback: native confirm
+            if (confirm(message || 'هل أنت متأكد؟')) resolve(true);
+            else resolve(false);
+            return;
+        }
+
+        // املأ المحتوى
+        const titleEl = document.getElementById('confirmTitle');
+        const msgEl = document.getElementById('confirmMessage');
+        const extraEl = document.getElementById('confirmExtra');
+        const yesBtn = document.getElementById('confirmYes');
+
+        if (titleEl) titleEl.textContent = title || 'تأكيد';
+        if (msgEl) msgEl.textContent = message || '';
+        if (extraEl) extraEl.innerHTML = extra || '';
+        if (yesBtn) yesBtn.textContent = confirmText;
+
+        // أظهر
+        modal.hidden = false;
+
+        function close(result) {
+            modal.hidden = true;
+            yesBtn?.removeEventListener('click', onYes);
+            modal.querySelector('[data-modal-close]')?.removeEventListener('click', onNo);
+            modal.removeEventListener('click', onBackdrop);
+            document.removeEventListener('keydown', onKey);
+            resolve(result);
+        }
+
+        function onYes() { close(true); }
+        function onNo()  { close(false); }
+        function onKey(e) { if (e.key === 'Escape') close(false); }
+        function onBackdrop(e) { 
+            if (e.target === modal) close(false); 
+        }
+
+        yesBtn?.addEventListener('click', onYes);
+        modal.querySelector('[data-modal-close]')?.addEventListener('click', onNo);
+        modal.addEventListener('click', onBackdrop);
+        document.addEventListener('keydown', onKey);
+    });
+}
+
+/* ============================================================
+   Generic Delete Handler
+============================================================ */
+async function deleteItem({ url, id, title, message, extra, onSuccess }) {
+    const ok = await showConfirm({
+        title: title || 'تأكيد الحذف',
+        message: message || 'هل أنت متأكد من الحذف؟',
+        extra: extra,
+        confirmText: '🗑 حذف',
+    });
+
+    if (!ok) return;
+
+    // CSRF
+    const csrf = document.querySelector('meta[name="csrf-token"]')?.content || '';
+
+    try {
+        const res = await fetch(url, {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-CSRF-Token': csrf,
+            },
+            body: JSON.stringify({ id: id }),
+        });
+
+        const j = await res.json();
+
+        if (j.success) {
+            if (typeof toast === 'function') {
+                toast('✅ ' + (j.message || 'تم الحذف'), 'success');
+            }
+            
+            if (typeof onSuccess === 'function') {
+                onSuccess(j);
+            } else {
+                // أعد تحميل الصفحة بعد نصف ثانية
+                setTimeout(() => location.reload(), 800);
+            }
+        } else {
+            // فشل → أظهر الخطأ
+            let errMsg = j.message || 'فشل الحذف';
+            
+            if (j.errors && Object.keys(j.errors).length) {
+                const details = Object.values(j.errors).join('، ');
+                errMsg += ' — ' + details;
+            }
+            
+            if (typeof toast === 'function') {
+                toast('❌ ' + errMsg, 'error');
+            } else {
+                alert(errMsg);
+            }
+        }
+    } catch (err) {
+        console.error('[delete] error:', err);
+        if (typeof toast === 'function') {
+            toast('خطأ: ' + err.message, 'error');
+        } else {
+            alert('خطأ: ' + err.message);
+        }
+    }
+}
+
+
 /* ============================================================
    Header Shadow on Scroll
 ============================================================ */
@@ -158,3 +277,6 @@ if ('serviceWorker' in navigator && location.protocol === 'https:') {
 window.api = api;
 window.toast = toast;
 window.toggleTheme = toggleTheme;
+// Expose globally
+window.showConfirm = showConfirm;
+window.deleteItem = deleteItem;

@@ -1,0 +1,2 @@
+[07-Oct-2026 05:34:35 America/New_York] [FATAL] Cannot redeclare ServantApiController::delete() @ /home/vol14_8/byethost15.com/b15_43071208/htdocs/app/controllers/api/ServantApiController.php:100
+[07-Oct-2026 05:39:23 America/New_York] [FATAL] Cannot redeclare ServantApiController::delete() @ /home/vol14_8/byethost15.com/b15_43071208/htdocs/app/controllers/api/ServantApiController.php:100

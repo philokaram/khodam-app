@@ -66,9 +66,9 @@ window.toggleTheme = toggleTheme;
         </main>
     </div>
     <?php require APP_PATH . '/views/layouts/footer.php'; ?>
+    <?php require APP_PATH . '/views/components/confirm-modal.php'; ?>
 
 <?php endif; ?>
-
 <script>
 window.APP_URL = <?= json_encode($base, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?>;
 

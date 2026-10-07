@@ -138,4 +138,61 @@ $data['emoji'] = $_POST['emoji'] ?? $emojis[array_rand($emojis)];
         }
         return $e;
     }
+    
+    public function delete(): void
+{
+    apiRequirePost();
+    apiRequireLogin();
+    apiRequirePermission('servants.delete');
+    apiVerifyCsrf();
+
+    $in = apiInput();
+    $id = (int)($in['id'] ?? 0);
+
+    if (!$id) {
+        apiError('معرّف الخادم مطلوب', [], 422);
+    }
+
+    $servant = (new Servant())->find($id);
+    if (!$servant) {
+        apiError('الخادم غير موجود', [], 404);
+    }
+
+    // ⚠️ Soft delete: تعطيل بدل حذف
+    // هذا يحفظ سجل الحضور التاريخي
+    
+    $hasAttendance = (int)(Database::one(
+        "SELECT COUNT(*) AS c FROM attendance WHERE servant_id = ?",
+        [$id]
+    )['c'] ?? 0);
+
+    if ($hasAttendance > 0) {
+        // عطّله بدل حذفه
+        (new Servant())->update($id, ['status' => SERVANT_INACTIVE]);
+        (new AuditLog())->write(
+            (int)currentUser()['id'],
+            'DEACTIVATE_SERVANT',
+            'servant',
+            $id,
+            $servant,
+            ['status' => SERVANT_INACTIVE]
+        );
+        apiSuccess(
+            ['deactivated' => true, 'records' => $hasAttendance],
+            'الخادم له سجل حضور، تم تعطيله بدلاً من حذفه'
+        );
+    } else {
+        // لا يوجد سجل → احذفه فعلاً
+        Database::query("DELETE FROM servants WHERE id = ?", [$id]);
+        (new AuditLog())->write(
+            (int)currentUser()['id'],
+            'DELETE_SERVANT',
+            'servant',
+            $id,
+            $servant,
+            null
+        );
+        apiSuccess(['deleted' => true], 'تم حذف الخادم بنجاح');
+    }
+}
 }

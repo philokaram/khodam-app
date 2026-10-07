@@ -30,9 +30,11 @@ $apiRoutes = [
 
         '/choirs/create'       => ['ChoirApiController', 'create'],
         '/choirs/update'       => ['ChoirApiController', 'update'],
+        '/choirs/delete'       => ['ChoirApiController',    'delete'],
 
         '/activities/create'   => ['ActivityApiController', 'create'],
         '/activities/update'   => ['ActivityApiController', 'update'],
+        '/activities/delete'   => ['ActivityApiController', 'delete'],
     ],
     'GET' => [
         '/health'                    => ['HealthApiController', 'health'],

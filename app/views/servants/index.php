@@ -1,10 +1,15 @@
-<div class="page-head">
-    <h1 class="page-title"><?= e(__('nav.servants')) ?></h1>
-    <?php if (hasPermission('servants.create')): ?>
-        <a href="<?= e(appBaseUrl()) ?>/servants/create" class="btn btn-primary">
-            + <?= e(__('servants.add')) ?>
-        </a>
-    <?php endif; ?>
+<div class="page-header">
+    <div class="page-header-text">
+        <h1><?= e(__('nav.servants')) ?></h1>
+        <p>إدارة الخدام المسجلين في النظام</p>
+    </div>
+    <div class="page-header-actions">
+        <?php if (hasPermission('servants.create')): ?>
+            <a href="<?= e(appBaseUrl()) ?>/servants/create" class="btn btn-primary">
+                + <?= e(__('servants.add')) ?>
+            </a>
+        <?php endif; ?>
+    </div>
 </div>
 
 <form method="get" class="filters-bar">
@@ -37,11 +42,11 @@
 
 <?php if (empty($servants)): ?>
     <div class="empty-state">
-        لا يوجد خدام بعد. 
+        <h3 style="margin:0 0 8px;color:var(--text-primary)">لا يوجد خدام</h3>
+        <p style="margin:0 0 16px">ابدأ بإضافة خادم جديد</p>
         <?php if (hasPermission('servants.create')): ?>
-            <br><br>
             <a href="<?= e(appBaseUrl()) ?>/servants/create" class="btn btn-primary">
-                + <?= e(__('servants.add')) ?>
+                + إضافة خادم
             </a>
         <?php endif; ?>
     </div>
@@ -49,8 +54,23 @@
 
     <div class="servant-card-grid stagger">
     <?php foreach ($servants as $s): ?>
-        <a href="<?= e(appBaseUrl()) ?>/servants/show?id=<?= (int)$s['id'] ?>" class="servant-card">
-            <div class="avatar-lg"><?= e($s['emoji'] ?? '👤') ?></div>
+        <a href="<?= e(appBaseUrl()) ?>/servants/show?id=<?= (int)$s['id'] ?>"
+           class="servant-card"
+           style="position:relative">
+
+            <?php if (hasPermission('servants.delete')): ?>
+                <button type="button"
+                        onclick="event.preventDefault(); event.stopPropagation(); deleteServant(<?= (int)$s['id'] ?>, '<?= e(addslashes($s['name'])) ?>')"
+                        title="حذف الخادم"
+                        style="position:absolute;top:10px;inset-inline-end:10px;width:32px;height:32px;border-radius:50%;background:var(--danger-soft);color:var(--danger);border:1px solid var(--danger);display:grid;place-items:center;cursor:pointer;font-size:14px;transition:all .15s;z-index:2;padding:0">
+                    🗑
+                </button>
+            <?php endif; ?>
+
+            <div class="avatar-lg">
+                <?= e($s['emoji'] ?? mb_substr($s['name'], 0, 1)) ?>
+            </div>
+
             <div class="info">
                 <div class="name"><?= e($s['name']) ?></div>
                 <div class="meta">
@@ -60,7 +80,7 @@
                     <?php endif; ?>
                 </div>
                 <div class="meta" style="margin-top:6px">
-                    <span class="badge <?= $s['status'] === 'active' ? 'badge-green' : 'badge-muted' ?>">
+                    <span class="badge <?= $s['status'] === 'active' ? 'badge-success' : 'badge-neutral' ?>">
                         <?= e(servantStatusLabel($s['status'])) ?>
                     </span>
                 </div>
@@ -70,3 +90,17 @@
     </div>
 
 <?php endif; ?>
+
+<script>
+function deleteServant(id, name) {
+    deleteItem({
+        url: window.APP_URL + '/api/servants/delete',
+        id: id,
+        title: 'حذف الخادم',
+        message: 'هل أنت متأكد من حذف "' + name + '"؟',
+        extra: '<div style="padding:10px;background:var(--warning-soft);border-radius:8px;font-size:13px;color:var(--warning-text);line-height:1.5">' +
+               '⚠️ إذا كان للخادم سجل حضور سابق، <strong>سيتم تعطيله</strong> بدلاً من حذفه للحفاظ على البيانات التاريخية.' +
+               '</div>'
+    });
+}
+</script>
