@@ -35,6 +35,14 @@ $apiRoutes = [
         '/activities/create'   => ['ActivityApiController', 'create'],
         '/activities/update'   => ['ActivityApiController', 'update'],
         '/activities/delete'   => ['ActivityApiController', 'delete'],
+        
+        '/users/create'          => ['UserApiController', 'create'],
+    	'/users/update'          => ['UserApiController', 'update'],
+    	'/users/change-password' => ['UserApiController', 'changePassword'],
+    	'/users/delete'          => ['UserApiController', 'delete'],
+    	'/users/activate'        => ['UserApiController', 'activate'],
+        
+        '/profile/change-password' => ['ProfileApiController', 'changePassword'],
     ],
     'GET' => [
         '/health'                    => ['HealthApiController', 'health'],
@@ -52,6 +60,8 @@ $apiRoutes = [
         '/statistics/overall'        => ['StatisticsApiController', 'overall'],
 
         '/dashboard'                 => ['DashboardApiController', 'index'],
+        
+        '/users' => ['UserApiController', 'index'],
     ],
 ];
 

@@ -1,8 +1,29 @@
-<div class="page-head">
-    <h1 class="page-title"><?= e(__('nav.reports')) ?></h1>
-    <button type="button" class="btn" onclick="window.print()">🖨️ طباعة</button>
+<?php
+$isChoirAdminUser = isChoirAdmin();
+$myChoir = $isChoirAdminUser
+    ? (new Choir())->find((int)currentUser()['choir_id'])
+    : null;
+?>
+
+<div class="page-header">
+    <div class="page-header-text">
+        <h1><?= e(__('nav.reports')) ?></h1>
+        <p>
+            <?php if ($isChoirAdminUser): ?>
+                تقارير خورس <?= e($myChoir['name'] ?? '') ?>
+            <?php else: ?>
+                تقارير الحضور المفصّلة
+            <?php endif; ?>
+        </p>
+    </div>
+    <div class="page-header-actions">
+        <button type="button" class="btn" onclick="window.print()">
+            🖨️ طباعة
+        </button>
+    </div>
 </div>
 
+<!-- Filters -->
 <form method="get" class="filters-bar">
     <label>
         <span><?= e(__('reports.from')) ?></span>
@@ -12,6 +33,8 @@
         <span><?= e(__('reports.to')) ?></span>
         <input type="date" name="to" value="<?= e($filters['to'] ?? '') ?>">
     </label>
+
+    <?php if (!$isChoirAdminUser): ?>
     <label>
         <span><?= e(__('reports.choir')) ?></span>
         <select name="choir_id">
@@ -23,6 +46,8 @@
             <?php endforeach; ?>
         </select>
     </label>
+    <?php endif; ?>
+
     <label>
         <span><?= e(__('reports.activity')) ?></span>
         <select name="activity_id">
@@ -34,36 +59,142 @@
             <?php endforeach; ?>
         </select>
     </label>
+
     <label>
         <span><?= e(__('reports.status')) ?></span>
         <select name="status">
             <option value="">الكل</option>
             <option value="present" <?= ($filters['status'] === 'present') ? 'selected' : '' ?>>حاضر</option>
             <option value="absent"  <?= ($filters['status'] === 'absent')  ? 'selected' : '' ?>>غائب</option>
-            <option value="excused" <?= ($filters['status'] === 'excused') ? 'selected' : '' ?>>لديه عذر</option>
+            <option value="excused" <?= ($filters['status'] === 'excused') ? 'selected' : '' ?>>بعذر</option>
         </select>
     </label>
+
     <button type="submit" class="btn btn-primary">تطبيق</button>
-    <a href="<?= e(appBaseUrl()) ?>/reports" class="btn">إعادة تعيين</a>
+    <?php if (!empty(array_filter($filters))): ?>
+        <a href="<?= e(appBaseUrl()) ?>/reports" class="btn">إعادة تعيين</a>
+    <?php endif; ?>
 </form>
-<!-- أزرار التصدير -->
-<div class="export-actions" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;padding:16px;background:var(--bg-surface);border:1px solid var(--border-color);border-radius:var(--radius-lg)">
+
+<!-- Export Buttons -->
+<?php if (hasPermission('reports.export')): ?>
+<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;padding:16px;background:var(--bg-surface);border:1px solid var(--border-color);border-radius:var(--radius-lg)">
     <div style="display:flex;align-items:center;gap:8px;flex:1;min-width:200px">
-        <span style="font-size:13px;font-weight:700;color:var(--text-muted)">تصدير Excel:</span>
+        <span style="font-size:13px;font-weight:700;color:var(--text-muted)">📥 تصدير Excel:</span>
+    </div>
+    <button type="button" class="btn" onclick="exportAttendance()">📊 تقرير الحضور</button>
+    <button type="button" class="btn" onclick="exportServantsStats()">👥 إحصائيات الخدام</button>
+    <button type="button" class="btn" onclick="exportActivitiesStats()">📅 إحصائيات الأنشطة</button>
+</div>
+<?php endif; ?>
+
+<!-- KPI Stats -->
+<div class="kpi-grid">
+    <div class="kpi kpi-success">
+        <div class="kpi-icon">✓</div>
+        <div class="kpi-label">الحضور</div>
+        <div class="kpi-value"><?= (int)$stats['present'] ?></div>
+    </div>
+    <div class="kpi kpi-danger">
+        <div class="kpi-icon">✕</div>
+        <div class="kpi-label">الغياب</div>
+        <div class="kpi-value"><?= (int)$stats['absent'] ?></div>
+    </div>
+    <div class="kpi kpi-info">
+        <div class="kpi-icon">⏱</div>
+        <div class="kpi-label">بعذر</div>
+        <div class="kpi-value"><?= (int)$stats['excused'] ?></div>
+    </div>
+    <div class="kpi kpi-warning">
+        <div class="kpi-icon">%</div>
+        <div class="kpi-label">نسبة الحضور</div>
+        <div class="kpi-value"><?= e(formatPercent((float)$stats['rate'])) ?></div>
+    </div>
+    <div class="kpi kpi-primary">
+        <div class="kpi-icon">📊</div>
+        <div class="kpi-label">إجمالي السجلات</div>
+        <div class="kpi-value"><?= (int)$stats['total_records'] ?></div>
+    </div>
+</div>
+
+<!-- Records Table -->
+<?php if (empty($records)): ?>
+    <div class="empty-state">
+        <h3 style="margin:0 0 8px;color:var(--text-primary)">لا توجد سجلات</h3>
+        <p>لا توجد سجلات مطابقة للفلاتر المحددة.</p>
+    </div>
+<?php else: ?>
+
+    <div class="card" style="padding:0;overflow:hidden">
+        <div style="overflow-x:auto">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>التاريخ</th>
+                        <th>الخادم</th>
+                        <?php if (!$isChoirAdminUser): ?>
+                            <th>الخورس</th>
+                        <?php endif; ?>
+                        <th>النشاط</th>
+                        <th>الحالة</th>
+                        <th>سبب العذر</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($records as $r):
+                    $status = $r['status'];
+                    $badgeClass = $status === 'present' ? 'badge-success'
+                                : ($status === 'absent'  ? 'badge-danger' : 'badge-warning');
+                    $statusLabel = match($status) {
+                        'present' => 'حاضر',
+                        'absent'  => 'غائب',
+                        'excused' => 'بعذر',
+                        default   => $status,
+                    };
+                ?>
+                    <tr>
+                        <td style="font-size:13px;color:var(--text-muted)">
+                            <?= e(formatDateAr($r['attendance_date'])) ?>
+                        </td>
+                        <td>
+                            <div style="display:flex;align-items:center;gap:8px">
+                                <div style="width:28px;height:28px;border-radius:50%;background:var(--bg-subtle);display:grid;place-items:center;font-size:12px;font-weight:700;flex-shrink:0">
+                                    <?= e(mb_substr($r['servant_name'], 0, 1)) ?>
+                                </div>
+                                <a href="<?= e(appBaseUrl()) ?>/servants/show?id=<?= (int)$r['servant_id'] ?>"
+                                   style="font-weight:700;color:var(--text-primary);text-decoration:none">
+                                    <?= e($r['servant_name']) ?>
+                                </a>
+                            </div>
+                        </td>
+                        <?php if (!$isChoirAdminUser): ?>
+                            <td style="font-size:13px">
+                                <?= e($r['choir_name']) ?>
+                            </td>
+                        <?php endif; ?>
+                        <td style="font-size:13px">
+                            <?= e($r['activity_name']) ?>
+                        </td>
+                        <td>
+                            <span class="badge <?= $badgeClass ?>">
+                                <?= e($statusLabel) ?>
+                            </span>
+                        </td>
+                        <td style="font-size:13px;color:var(--text-muted)">
+                            <?= e($r['excuse_reason'] ?? '—') ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 
-    <button type="button" class="btn" onclick="exportAttendance()">
-        📊 تقرير الحضور التفصيلي
-    </button>
+    <p style="color:var(--text-muted);font-size:13px;margin-top:12px;text-align:center">
+        عرض <?= count($records) ?> سجل (الحد الأقصى 500)
+    </p>
 
-    <button type="button" class="btn" onclick="exportServantsStats()">
-        👥 إحصائيات الخدام
-    </button>
-
-    <button type="button" class="btn" onclick="exportActivitiesStats()">
-        📅 إحصائيات الأنشطة
-    </button>
-</div>
+<?php endif; ?>
 
 <script>
 function buildQuery() {
@@ -86,69 +217,3 @@ function exportActivitiesStats() {
     window.location.href = window.APP_URL + '/reports/export/activities-stats' + (qs ? '?' + qs : '');
 }
 </script>
-<div class="kpi-grid" style="margin-bottom:20px">
-    <div class="kpi kpi-green">
-        <b><?= (int)$stats['present'] ?></b>
-        <small>الحضور</small>
-    </div>
-    <div class="kpi kpi-red">
-        <b><?= (int)$stats['absent'] ?></b>
-        <small>الغياب</small>
-    </div>
-    <div class="kpi kpi-sky">
-        <b><?= (int)$stats['excused'] ?></b>
-        <small>الغياب بعذر</small>
-    </div>
-    <div class="kpi kpi-yellow">
-        <b><?= e(formatPercent((float)$stats['rate'])) ?></b>
-        <small>نسبة الحضور</small>
-    </div>
-    <div class="kpi kpi-orange">
-        <b><?= (int)$stats['total_records'] ?></b>
-        <small>إجمالي السجلات</small>
-    </div>
-</div>
-
-<?php if (empty($records)): ?>
-    <div class="empty-state">
-        لا توجد سجلات مطابقة للفلاتر.
-    </div>
-<?php else: ?>
-    <div style="overflow-x:auto">
-    <table class="table">
-        <thead>
-            <tr>
-                <th>التاريخ</th>
-                <th>الخادم</th>
-                <th>الخورس</th>
-                <th>النشاط</th>
-                <th>الحالة</th>
-                <th>سبب العذر</th>
-            </tr>
-        </thead>
-        <tbody>
-        <?php foreach ($records as $r):
-            $status = $r['status'];
-            $badgeClass = $status === 'present' ? 'badge-green'
-                        : ($status === 'absent'  ? 'badge-red' : 'badge-yellow');
-        ?>
-            <tr>
-                <td><?= e(formatDateAr($r['attendance_date'])) ?></td>
-                <td>
-                    <a href="<?= e(appBaseUrl()) ?>/reports/servant?id=<?= (int)$r['servant_id'] ?>" style="text-decoration:underline">
-                        <?= e($r['servant_name']) ?>
-                    </a>
-                </td>
-                <td><?= e($r['choir_name']) ?></td>
-                <td><?= e($r['activity_name']) ?></td>
-                <td><span class="badge <?= $badgeClass ?>"><?= e(attendanceStatusLabel($status)) ?></span></td>
-                <td><?= e($r['excuse_reason'] ?? '—') ?></td>
-            </tr>
-        <?php endforeach; ?>
-        </tbody>
-    </table>
-    </div>
-    <p style="color:var(--muted);font-size:13px;margin-top:10px">
-        عرض <?= count($records) ?> سجل (الحد الأقصى 500).
-    </p>
-<?php endif; ?>

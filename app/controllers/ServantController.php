@@ -2,21 +2,30 @@
 class ServantController
 {
     public function index(): void
-    {
-        requireLogin();
-        requirePermission('servants.view');
-        $filters = [
-            'choir_id' => $_GET['choir_id'] ?? null,
-            'status'   => $_GET['status']   ?? null,
-            'search'   => $_GET['search']   ?? null,
-        ];
-        view('servants/index', [
-            'title'    => __('nav.servants'),
-            'servants' => (new Servant())->allWithChoir($filters),
-            'choirs'   => (new Choir())->all(),
-            'filters'  => $filters,
-        ]);
+{
+    requireLogin();
+    requirePermission('servants.view');
+
+    $filters = [
+        'choir_id' => !empty($_GET['choir_id']) ? (int)$_GET['choir_id'] : null,
+        'status'   => $_GET['status'] ?? null,
+        'search'   => $_GET['search'] ?? null,
+    ];
+
+    // CHOIR_ADMIN: خدامه فقط
+    if (isChoirAdmin()) {
+        $filters['choir_id'] = (int)currentUser()['choir_id'];
     }
+
+    view('servants/index', [
+        'title'    => __('nav.servants'),
+        'servants' => (new Servant())->allWithChoir($filters),
+        'choirs'   => isChoirAdmin()
+                        ? [(new Choir())->find((int)currentUser()['choir_id'])]
+                        : (new Choir())->all(),
+        'filters'  => $filters,
+    ]);
+}
 
     public function create(): void
     {

@@ -4,12 +4,14 @@ class DashboardController
     public function index(): void
     {
         requireLogin();
-        // ❌ لا تستدعِ verifyCsrf هنا — هذا GET وليس POST!
 
-        if (!hasPermission('attendance.view') && !hasPermission('reports.view')) {
-            http_response_code(403);
-            exit(__('messages.no_permission'));
+        // SERVANT: وجّهه إلى صفحة ملفه الشخصي
+        if (isServant()) {
+            redirect('/servant/reports');
         }
+
+        // باقي الأدوار تحتاج صلاحية attendance.view
+        requirePermission('attendance.view');
 
         $filters = [
             'from'        => $_GET['from']        ?? null,
@@ -18,12 +20,19 @@ class DashboardController
             'activity_id' => !empty($_GET['activity_id']) ? (int)$_GET['activity_id'] : null,
         ];
 
+        // CHOIR_ADMIN: خورسه فقط
+        if (isChoirAdmin()) {
+            $filters['choir_id'] = (int)currentUser()['choir_id'];
+        }
+
         $stats = (new StatisticsService())->overall($filters);
 
         view('dashboard/index', [
             'title'      => __('nav.dashboard'),
             'stats'      => $stats,
-            'choirs'     => (new Choir())->all(),
+            'choirs'     => isChoirAdmin()
+                                ? [(new Choir())->find((int)currentUser()['choir_id'])]
+                                : (new Choir())->all(),
             'activities' => (new Activity())->all(),
             'filters'    => $filters,
         ]);

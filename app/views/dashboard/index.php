@@ -38,6 +38,11 @@ $excusedDash = ($excusedPct / 100) * $circumference;
 <div class="page-head">
     <div>
         <h1 class="page-title">لوحة التحكم</h1>
+        <?php if (isChoirAdmin()): ?>
+<p style="color:var(--text-muted);margin:4px 0 0;font-size:14px">
+    إحصائيات خورس <?= e(currentUser()['choir_name'] ?? '') ?>
+</p>
+<?php endif; ?>
         <p style="color:var(--muted);margin:4px 0 0;font-size:15px">
             نظرة سريعة على حضور الخدام
         </p>
@@ -56,17 +61,23 @@ $excusedDash = ($excusedPct / 100) * $circumference;
         <span>إلى تاريخ</span>
         <input type="date" name="to" value="<?= e($filters['to'] ?? '') ?>">
     </label>
-    <label>
-        <span>الخورس</span>
-        <select name="choir_id">
-            <option value="">الكل</option>
-            <?php foreach ($choirs as $c): ?>
-                <option value="<?= (int)$c['id'] ?>" <?= ($filters['choir_id'] == $c['id']) ? 'selected' : '' ?>>
-                    <?= e($c['name']) ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
-    </label>
+<?php if (!isChoirAdmin()): ?>
+<label>
+    <span>الخورس</span>
+    <select name="choir_id">
+        <option value="">الكل</option>
+        <?php foreach ($choirs as $c): ?>
+            <option value="<?= (int)$c['id'] ?>" <?= ($filters['choir_id'] == $c['id']) ? 'selected' : '' ?>>
+                <?= e($c['name']) ?>
+            </option>
+        <?php endforeach; ?>
+    </select>
+</label>
+<?php else: ?>
+<div style="display:flex;align-items:center;gap:8px;padding:8px 14px;background:var(--primary-soft);border:1px solid var(--primary);border-radius:var(--radius);font-weight:700;font-size:13px;color:var(--primary)">
+    🎵 <?= e(currentUser()['choir_name'] ?? '') ?>
+</div>
+<?php endif; ?>
     <label>
         <span>النشاط</span>
         <select name="activity_id">

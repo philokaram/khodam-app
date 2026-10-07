@@ -1,10 +1,16 @@
 <div class="page-header">
     <div class="page-header-text">
         <h1><?= e(__('nav.servants')) ?></h1>
-        <p>إدارة الخدام المسجلين في النظام</p>
+        <p>
+            <?php if (isChoirAdmin()): ?>
+                خدام خورس <?= e(currentUser()['choir_name'] ?? '') ?>
+            <?php else: ?>
+                إدارة الخدام المسجلين في النظام
+            <?php endif; ?>
+        </p>
     </div>
-  <div class="page-header-actions">
-    <?php if (hasPermission('servants.view')): ?>
+   <div class="page-header-actions">
+    <?php if (hasPermission('reports.export')): ?>
         <button type="button" class="btn" onclick="exportServants()">
             📥 تصدير Excel
         </button>
@@ -23,6 +29,8 @@
         <input type="search" name="search" value="<?= e($filters['search'] ?? '') ?>"
                placeholder="<?= e(__('servants.search')) ?>">
     </label>
+
+    <?php if (!isChoirAdmin()): ?>
     <label>
         <span><?= e(__('servants.choir')) ?></span>
         <select name="choir_id">
@@ -34,6 +42,8 @@
             <?php endforeach; ?>
         </select>
     </label>
+    <?php endif; ?>
+
     <label>
         <span><?= e(__('servants.status')) ?></span>
         <select name="status">
@@ -47,8 +57,12 @@
 
 <?php if (empty($servants)): ?>
     <div class="empty-state">
-        <h3 style="margin:0 0 8px;color:var(--text-primary)">لا يوجد خدام</h3>
-        <p style="margin:0 0 16px">ابدأ بإضافة خادم جديد</p>
+        <h3 style="margin:0 0 8px;color:var(--text-primary)">
+            <?= isChoirAdmin() ? 'لا يوجد خدام في خورسك' : 'لا يوجد خدام' ?>
+        </h3>
+        <p style="margin:0 0 16px">
+            <?= isChoirAdmin() ? 'تواصل مع المدير لإضافة خدام' : 'ابدأ بإضافة خادم جديد' ?>
+        </p>
         <?php if (hasPermission('servants.create')): ?>
             <a href="<?= e(appBaseUrl()) ?>/servants/create" class="btn btn-primary">
                 + إضافة خادم
@@ -79,9 +93,12 @@
             <div class="info">
                 <div class="name"><?= e($s['name']) ?></div>
                 <div class="meta">
-                    <?= e($s['choir_name']) ?>
+                    <?php if (!isChoirAdmin()): ?>
+                        <?= e($s['choir_name']) ?>
+                        <?php if ($s['code']): ?> · <?php endif; ?>
+                    <?php endif; ?>
                     <?php if ($s['code']): ?>
-                        · <code><?= e($s['code']) ?></code>
+                        <code><?= e($s['code']) ?></code>
                     <?php endif; ?>
                 </div>
                 <div class="meta" style="margin-top:6px">
@@ -108,8 +125,8 @@ function deleteServant(id, name) {
                '</div>'
     });
 }
-    
-    function exportServants() {
+
+function exportServants() {
     var params = new URLSearchParams(window.location.search);
     window.location.href = window.APP_URL + '/servants/export' + (params.toString() ? '?' + params.toString() : '');
 }

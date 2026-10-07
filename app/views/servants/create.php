@@ -1,85 +1,125 @@
 <div class="page-header">
     <div class="page-header-text">
         <h1><?= e(__('servants.add')) ?></h1>
-        <p>أضف خادماً جديداً لنظام الحضور</p>
+        <p>أضف خادماً جديداً — سيتم إنشاء حساب دخول له تلقائياً</p>
     </div>
     <div class="page-header-actions">
         <a href="<?= e(appBaseUrl()) ?>/servants" class="btn">← رجوع</a>
     </div>
 </div>
 
-<form id="servantCreateForm" class="form-container">
+<form id="servantCreateForm" class="form-container" style="max-width:720px">
     <input type="hidden" name="_csrf_token" value="<?= e(csrfToken()) ?>">
 
-    <div class="form-group">
-        <label class="form-label" for="servantName"><?= e(__('servants.name')) ?> *</label>
-        <input type="text" id="servantName" name="name" required
-               placeholder="الاسم الثلاثي"
-               value="<?= e($_SESSION['_old']['name'] ?? '') ?>">
-    </div>
+    <!-- البيانات الشخصية -->
+    <div style="padding-bottom:20px;border-bottom:1px solid var(--border-color);margin-bottom:20px">
+        <h3 style="margin:0 0 16px;font-size:15px;font-weight:800;display:flex;align-items:center;gap:8px">
+            <span style="width:32px;height:32px;background:var(--primary-soft);color:var(--primary);border-radius:10px;display:grid;place-items:center">👤</span>
+            بيانات الخادم
+        </h3>
 
-    <div class="form-group">
-        <label class="form-label">الإيموجي</label>
-        <div class="emoji-picker" id="emojiPicker" style="display:grid;grid-template-columns:repeat(8,1fr);gap:6px;padding:10px;background:var(--bg-subtle);border:1px solid var(--border-color);border-radius:var(--radius)">
-            <?php
-            $emojis = ['😀','😎','🥳','🤓','😇','🙂','😄','😊','😁','🤗','🙌','👨‍🎓','👨‍💼','👨‍🏫','🧑','👤'];
-            $selectedEmoji = $_SESSION['_old']['emoji'] ?? '👤';
-            foreach ($emojis as $e):
-            ?>
-                <button type="button" class="emoji-btn <?= $selectedEmoji === $e ? 'selected' : '' ?>"
-                        data-emoji="<?= $e ?>"
-                        style="aspect-ratio:1;display:grid;place-items:center;font-size:22px;background:var(--bg-surface);border:2px solid <?= $selectedEmoji === $e ? 'var(--primary)' : 'transparent' ?>;border-radius:10px;cursor:pointer;transition:all .15s;padding:0">
-                    <?= $e ?>
-                </button>
-            <?php endforeach; ?>
+        <div style="display:grid;gap:16px">
+            <div class="form-group">
+                <label class="form-label"><?= e(__('servants.name')) ?> *</label>
+                <input type="text" id="servantName" required
+                       placeholder="الاسم الثلاثي"
+                       value="<?= e($_SESSION['_old']['name'] ?? '') ?>">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">الإيموجي</label>
+                <div id="emojiPicker" style="display:grid;grid-template-columns:repeat(8,1fr);gap:6px;padding:10px;background:var(--bg-subtle);border:1px solid var(--border-color);border-radius:var(--radius)">
+                    <?php
+                    $emojis = ['😀','😎','🥳','🤓','😇','🙂','😄','😊','😁','🤗','🙌','👨‍🎓','👨‍💼','👨‍🏫','🧑','👤'];
+                    $selectedEmoji = $_SESSION['_old']['emoji'] ?? '👤';
+                    foreach ($emojis as $e):
+                    ?>
+                        <button type="button" class="emoji-btn <?= $selectedEmoji === $e ? 'selected' : '' ?>"
+                                data-emoji="<?= $e ?>"
+                                style="aspect-ratio:1;display:grid;place-items:center;font-size:22px;background:var(--bg-surface);border:2px solid <?= $selectedEmoji === $e ? 'var(--primary)' : 'transparent' ?>;border-radius:10px;cursor:pointer;padding:0">
+                            <?= $e ?>
+                        </button>
+                    <?php endforeach; ?>
+                </div>
+                <input type="hidden" name="emoji" id="emojiInput" value="<?= e($selectedEmoji) ?>">
+            </div>
+
+            <?php if (!isChoirAdmin()): ?>
+            <div class="form-group">
+                <label class="form-label"><?= e(__('servants.choir')) ?> *</label>
+                <select id="servantChoir" required>
+                    <option value="">اختر الخورس...</option>
+                    <?php foreach ($choirs as $c): ?>
+                        <option value="<?= (int)$c['id'] ?>">
+                            <?= e($c['name']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <?php else: ?>
+                <input type="hidden" id="servantChoir" value="<?= (int)($choirs[0]['id'] ?? 0) ?>">
+                <div class="form-group">
+                    <label class="form-label"><?= e(__('servants.choir')) ?></label>
+                    <input type="text" value="<?= e($choirs[0]['name'] ?? '') ?>" disabled
+                           style="background:var(--bg-subtle);cursor:not-allowed">
+                </div>
+            <?php endif; ?>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+                <div class="form-group">
+                    <label class="form-label"><?= e(__('servants.code')) ?></label>
+                    <input type="text" id="servantCode" dir="ltr" placeholder="S001">
+                </div>
+                <div class="form-group">
+                    <label class="form-label"><?= e(__('servants.phone')) ?></label>
+                    <input type="tel" id="servantPhone" dir="ltr" placeholder="01xxxxxxxxx">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label"><?= e(__('servants.join_date')) ?></label>
+                <input type="date" id="servantJoinDate" value="<?= date('Y-m-d') ?>">
+            </div>
         </div>
-        <input type="hidden" name="emoji" id="emojiInput" value="<?= e($selectedEmoji) ?>">
     </div>
 
-    <div class="form-group">
-        <label class="form-label" for="servantChoir"><?= e(__('servants.choir')) ?> *</label>
-        <select id="servantChoir" name="choir_id" required>
-            <option value="">اختر الخورس...</option>
-            <?php foreach ($choirs as $c): ?>
-                <option value="<?= (int)$c['id'] ?>"
-                    <?= (($_SESSION['_old']['choir_id'] ?? 0) == $c['id']) ? 'selected' : '' ?>>
-                    <?= e($c['name']) ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
-    </div>
+    <!-- حساب الدخول -->
+    <div style="padding-bottom:20px;border-bottom:1px solid var(--border-color);margin-bottom:20px">
+        <h3 style="margin:0 0 16px;font-size:15px;font-weight:800;display:flex;align-items:center;gap:8px">
+            <span style="width:32px;height:32px;background:var(--warning-soft);color:var(--warning);border-radius:10px;display:grid;place-items:center">🔐</span>
+            حساب الدخول
+        </h3>
+        <p style="margin:0 0 16px;font-size:13px;color:var(--text-muted)">
+            سيتمكن الخادم من تسجيل الدخول ورؤية ملفه الشخصي وسجل حضوره
+        </p>
 
-    <div class="form-group">
-        <label class="form-label" for="servantCode"><?= e(__('servants.code')) ?></label>
-        <input type="text" id="servantCode" name="code" dir="ltr"
-               placeholder="S001"
-               value="<?= e($_SESSION['_old']['code'] ?? '') ?>">
-        <div class="form-hint">كود فريد للخادم (اختياري)</div>
-    </div>
+        <div style="display:grid;gap:16px">
+            <div class="form-group">
+                <label class="form-label">اسم المستخدم *</label>
+                <input type="text" id="servantUsername" dir="ltr" required
+                       placeholder="ahmed" pattern="[a-zA-Z0-9_\.]{3,50}">
+                <div class="form-hint">3-50 حرفاً إنجليزياً/أرقام/_. — يجب أن يكون فريداً</div>
+            </div>
 
-    <div class="form-group">
-        <label class="form-label" for="servantPhone"><?= e(__('servants.phone')) ?></label>
-        <input type="tel" id="servantPhone" name="phone" dir="ltr"
-               placeholder="01xxxxxxxxx"
-               value="<?= e($_SESSION['_old']['phone'] ?? '') ?>">
-    </div>
+            <div class="form-group">
+                <label class="form-label">كلمة المرور *</label>
+                <div style="display:flex;gap:8px">
+                    <input type="text" id="servantPassword" dir="ltr" required minlength="6"
+                           placeholder="••••••••" style="flex:1">
+                    <button type="button" class="btn" onclick="generatePassword()" title="توليد كلمة مرور">🎲</button>
+                </div>
+                <div class="form-hint">6 أحرف على الأقل — احفظها وأعطها للخادم</div>
+            </div>
 
-    <div class="form-group">
-        <label class="form-label" for="servantJoinDate"><?= e(__('servants.join_date')) ?></label>
-        <input type="date" id="servantJoinDate" name="join_date"
-               value="<?= e($_SESSION['_old']['join_date'] ?? date('Y-m-d')) ?>">
-    </div>
-
-    <div class="form-group">
-        <label class="form-label" for="servantStatus"><?= e(__('servants.status')) ?></label>
-        <select id="servantStatus" name="status">
-            <option value="active" <?= (($_SESSION['_old']['status'] ?? 'active') === 'active') ? 'selected' : '' ?>>نشط</option>
-            <option value="inactive" <?= (($_SESSION['_old']['status'] ?? '') === 'inactive') ? 'selected' : '' ?>>غير نشط</option>
-        </select>
+            <label class="check">
+                <input type="checkbox" id="showPassword">
+                <span style="font-size:13px">إظهار كلمة المرور</span>
+            </label>
+        </div>
     </div>
 
     <div class="form-actions">
-        <button type="submit" class="btn btn-primary" id="submitBtn">
+        <button type="submit" class="btn btn-primary" id="submitBtn" style="min-width:160px">
             حفظ الخادم
         </button>
         <a href="<?= e(appBaseUrl()) ?>/servants" class="btn">إلغاء</a>
@@ -89,54 +129,67 @@
 <style>
 .emoji-btn:hover { transform: scale(1.1); background: var(--bg-hover); }
 .emoji-btn.selected { background: var(--primary-soft) !important; }
+@media (max-width: 640px) {
+    form[style*="grid-template-columns:1fr 1fr"] {
+        grid-template-columns: 1fr !important;
+    }
+}
 </style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     var form = document.getElementById('servantCreateForm');
-    var submitBtn = document.getElementById('submitBtn');
+    var btn = document.getElementById('submitBtn');
     var emojiInput = document.getElementById('emojiInput');
 
-    // اختيار الإيموجي
-    document.querySelectorAll('.emoji-btn').forEach(function(btn) {
-        btn.addEventListener('click', function() {
-            document.querySelectorAll('.emoji-btn').forEach(function(b) {
-                b.classList.remove('selected');
-                b.style.borderColor = 'transparent';
+    // Emoji picker
+    document.querySelectorAll('.emoji-btn').forEach(function(b) {
+        b.addEventListener('click', function() {
+            document.querySelectorAll('.emoji-btn').forEach(function(x) {
+                x.classList.remove('selected');
+                x.style.borderColor = 'transparent';
             });
-            btn.classList.add('selected');
-            btn.style.borderColor = 'var(--primary)';
-            emojiInput.value = btn.dataset.emoji;
+            b.classList.add('selected');
+            b.style.borderColor = 'var(--primary)';
+            emojiInput.value = b.dataset.emoji;
         });
     });
 
-    // إرسال النموذج
+    // Show/hide password
+    document.getElementById('showPassword').addEventListener('change', function() {
+        var inp = document.getElementById('servantPassword');
+        inp.type = this.checked ? 'text' : 'password';
+    });
+
+    // Submit
     form.addEventListener('submit', async function(e) {
         e.preventDefault();
 
-        var name = document.getElementById('servantName').value.trim();
-        var choirId = parseInt(document.getElementById('servantChoir').value, 10);
-        var code = document.getElementById('servantCode').value.trim();
-        var phone = document.getElementById('servantPhone').value.trim();
-        var joinDate = document.getElementById('servantJoinDate').value;
-        var status = document.getElementById('servantStatus').value;
-        var emoji = emojiInput.value;
+        var data = {
+            name: document.getElementById('servantName').value.trim(),
+            emoji: emojiInput.value,
+            choir_id: parseInt(document.getElementById('servantChoir').value, 10),
+            code: document.getElementById('servantCode').value.trim() || null,
+            phone: document.getElementById('servantPhone').value.trim() || null,
+            join_date: document.getElementById('servantJoinDate').value || null,
+            username: document.getElementById('servantUsername').value.trim(),
+            password: document.getElementById('servantPassword').value,
+        };
 
-        if (!name) {
-            if (typeof toast === 'function') toast('يرجى إدخال اسم الخادم', 'error');
-            return;
+        // Validation
+        if (!data.name) { toast('يرجى إدخال اسم الخادم', 'error'); return; }
+        if (!data.choir_id) { toast('يرجى اختيار الخورس', 'error'); return; }
+        if (!data.username || data.username.length < 3) { toast('اسم المستخدم 3 أحرف على الأقل', 'error'); return; }
+        if (!/^[a-zA-Z0-9_\.]{3,50}$/.test(data.username)) {
+            toast('اسم المستخدم: حروف إنجليزية وأرقام و _ و . فقط', 'error'); return;
         }
-        if (!choirId) {
-            if (typeof toast === 'function') toast('يرجى اختيار الخورس', 'error');
-            return;
-        }
+        if (!data.password || data.password.length < 6) { toast('كلمة المرور 6 أحرف على الأقل', 'error'); return; }
 
-        var origText = submitBtn.textContent;
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'جاري الحفظ...';
+        var orig = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = 'جاري الحفظ...';
 
-        var csrf = document.querySelector('meta[name="csrf-token"]');
-        csrf = csrf ? csrf.content : '';
+        var csrf = document.querySelector('meta[name="csrf-token"]').content;
 
         try {
             var res = await fetch('/api/servants/create', {
@@ -147,42 +200,41 @@ document.addEventListener('DOMContentLoaded', function() {
                     'Accept': 'application/json',
                     'X-CSRF-Token': csrf
                 },
-                body: JSON.stringify({
-                    name: name,
-                    emoji: emoji,
-                    choir_id: choirId,
-                    code: code || null,
-                    phone: phone || null,
-                    join_date: joinDate || null,
-                    status: status
-                })
+                body: JSON.stringify(data)
             });
-
             var j = await res.json();
             console.log('[create servant]', j);
 
             if (j.success) {
-                if (typeof toast === 'function') toast('✅ ' + (j.message || 'تم الحفظ'), 'success');
-                setTimeout(function() {
-                    window.location.href = window.APP_URL + '/servants';
-                }, 800);
+                toast('✅ ' + j.message, 'success');
+                setTimeout(() => window.location.href = window.APP_URL + '/servants', 800);
             } else {
-                var errMsg = j.message || 'فشل الحفظ';
+                var msg = j.message;
                 if (j.errors && Object.keys(j.errors).length) {
-                    errMsg += ' — ' + Object.values(j.errors).join('، ');
+                    msg += ' — ' + Object.values(j.errors).join('، ');
                 }
-                if (typeof toast === 'function') toast('❌ ' + errMsg, 'error');
-                else alert(errMsg);
-                submitBtn.disabled = false;
-                submitBtn.textContent = origText;
+                toast('❌ ' + msg, 'error');
+                btn.disabled = false;
+                btn.textContent = orig;
             }
         } catch (err) {
-            console.error('[create servant] error:', err);
-            if (typeof toast === 'function') toast('خطأ: ' + err.message, 'error');
-            else alert('خطأ: ' + err.message);
-            submitBtn.disabled = false;
-            submitBtn.textContent = origText;
+            toast('خطأ: ' + err.message, 'error');
+            btn.disabled = false;
+            btn.textContent = orig;
         }
     });
 });
+
+function generatePassword() {
+    var chars = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    var pw = '';
+    for (var i = 0; i < 8; i++) {
+        pw += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    var inp = document.getElementById('servantPassword');
+    inp.value = pw;
+    inp.type = 'text';
+    document.getElementById('showPassword').checked = true;
+    toast('تم توليد كلمة المرور — احفظها', 'info');
+}
 </script>

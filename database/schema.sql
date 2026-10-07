@@ -140,4 +140,95 @@ UPDATE servants SET emoji = CASE (id % 8)
     WHEN 6 THEN '😄'
     ELSE '😊'
 END WHERE emoji = '👤' OR emoji IS NULL;
+
+
+-- 1. أضف دور SERVANT
+INSERT INTO roles (name, label_ar) VALUES
+('SERVANT', 'خادم')
+ON DUPLICATE KEY UPDATE label_ar = 'خادم';
+
+-- 2. اربط الخادم بحساب مستخدم (عمود servant_id)
+ALTER TABLE users 
+ADD COLUMN servant_id INT UNSIGNED NULL AFTER choir_id,
+ADD CONSTRAINT fk_users_servant FOREIGN KEY (servant_id) REFERENCES servants(id) ON DELETE SET NULL;
+
+-- 3. احصل على id دور SERVANT
+SELECT id, name FROM roles WHERE name = 'SERVANT';
+-- 4. أضف صلاحية عرض الملف الشخصي
+INSERT INTO permissions (name, label_ar) VALUES
+('profile.view', 'عرض الملف الشخصي')
+ON DUPLICATE KEY UPDATE label_ar = 'عرض الملف الشخصي';
+
+-- 5. أضف صلاحيات SERVANT
+INSERT INTO role_permissions (role_id, permission_id)
+SELECT 5, id FROM permissions WHERE name IN ('profile.view')
+ON DUPLICATE KEY UPDATE role_id = role_id;
+
+-- 6. تأكد من صلاحيات CHOIR_ADMIN
+-- CHOIR_ADMIN: عرض خدامه + تسجيل حضور خدامه + تقارير خدامه
+DELETE FROM role_permissions WHERE role_id = 3;
+INSERT INTO role_permissions (role_id, permission_id)
+SELECT 3, id FROM permissions WHERE name IN (
+    'servants.view', 'servants.create', 'servants.edit',
+    'choirs.view', 'activities.view',
+    'attendance.view', 'attendance.create', 'attendance.edit',
+    'reports.view'
+);
+
+-- 7. تأكد من صلاحيات ATTENDANCE_USER
+-- ATTENDANCE_USER: تسجيل حضور لكل الخُوَرَس + تقارير
+DELETE FROM role_permissions WHERE role_id = 4;
+INSERT INTO role_permissions (role_id, permission_id)
+SELECT 4, id FROM permissions WHERE name IN (
+    'servants.view', 'choirs.view', 'activities.view',
+    'attendance.view', 'attendance.create', 'attendance.edit',
+    'reports.view'
+);
+
+-- 8. تأكد من صلاحيات ADMIN
+-- ADMIN: كل شيء ما عدا إدارة SUPER_ADMIN
+DELETE FROM role_permissions WHERE role_id = 2;
+INSERT INTO role_permissions (role_id, permission_id)
+SELECT 2, id FROM permissions WHERE name IN (
+    'servants.view', 'servants.create', 'servants.edit', 'servants.delete',
+    'choirs.view', 'choirs.create', 'choirs.edit', 'choirs.delete',
+    'activities.view', 'activities.create', 'activities.edit', 'activities.delete',
+    'attendance.view', 'attendance.create', 'attendance.edit', 'attendance.delete',
+    'reports.view', 'reports.export',
+    'users.view', 'users.create', 'users.edit', 'users.delete',
+    'profile.view'
+);
+
+-- 9. تأكد من صلاحيات SUPER_ADMIN (كل شيء)
+DELETE FROM role_permissions WHERE role_id = 1;
+INSERT INTO role_permissions (role_id, permission_id)
+SELECT 1, id FROM permissions;
+
+-- 10. تحقق
+SELECT r.name, r.label_ar, COUNT(rp.permission_id) AS perms
+FROM roles r
+LEFT JOIN role_permissions rp ON rp.role_id = r.id
+GROUP BY r.id
+ORDER BY r.id;
+
+-- احذف كل صلاحيات CHOIR_ADMIN
+DELETE FROM role_permissions WHERE role_id = 3;
+
+-- أضف صلاحيات القراءة فقط
+INSERT INTO role_permissions (role_id, permission_id)
+SELECT 3, id FROM permissions WHERE name IN (
+    'servants.view',
+    'choirs.view',
+    'activities.view',
+    'attendance.view',
+    'reports.view'
+);
+
+-- تحقق
+SELECT p.name, p.label_ar
+FROM role_permissions rp
+JOIN permissions p ON p.id = rp.permission_id
+WHERE rp.role_id = 3
+ORDER BY p.name;
+
 SET FOREIGN_KEY_CHECKS = 1;

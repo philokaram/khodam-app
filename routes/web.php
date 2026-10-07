@@ -34,6 +34,9 @@ $webRoutes = [
         '/servants/edit'       => ['ServantController', 'edit'],
         '/servants/show'       => ['ServantController', 'show'],
         '/servants/export'     => ['ExportController', 'servants'],
+        '/servant/history'     => ['ServantPortalController', 'history'],
+        '/servant/reports'     => ['ServantPortalController', 'reports'],
+        '/servant/session'     => ['ServantPortalController', 'session'], 
 
         '/choirs'              => ['ChoirController', 'index'],
         '/choirs/create'       => ['ChoirController', 'create'],
@@ -56,6 +59,8 @@ $webRoutes = [
         '/users'               => ['UserController', 'index'],
         '/users/create'        => ['UserController', 'create'],
         '/users/edit'          => ['UserController', 'edit'],
+        
+         '/profile'            => ['ProfileController', 'index'],
     ],
     'POST' => [
         // تسجيل الدخول عبر الصفحة (fallback بدون JS)

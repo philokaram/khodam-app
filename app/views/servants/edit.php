@@ -74,7 +74,63 @@
             <option value="inactive" <?= $servant['status'] === 'inactive' ? 'selected' : '' ?>>غير نشط</option>
         </select>
     </div>
+<!-- حساب الدخول -->
+<?php
+$linkedUser = Database::one("SELECT id, username, status FROM users WHERE servant_id = ?", [(int)$servant['id']]);
+?>
+<?php if ($linkedUser): ?>
+<div style="padding-top:20px;border-top:1px solid var(--border-color);margin-top:20px">
+    <h3 style="margin:0 0 16px;font-size:15px;font-weight:800;display:flex;align-items:center;gap:8px">
+        <span style="width:32px;height:32px;background:var(--warning-soft);color:var(--warning);border-radius:10px;display:grid;place-items:center">🔐</span>
+        حساب الدخول
+    </h3>
 
+    <div style="display:grid;gap:12px">
+        <div style="display:flex;justify-content:space-between;padding:12px 16px;background:var(--bg-subtle);border-radius:var(--radius)">
+            <span style="font-weight:600;color:var(--text-muted);font-size:13px">اسم المستخدم</span>
+            <code style="direction:ltr;font-weight:700"><?= e($linkedUser['username']) ?></code>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:12px 16px;background:var(--bg-subtle);border-radius:var(--radius)">
+            <span style="font-weight:600;color:var(--text-muted);font-size:13px">حالة الحساب</span>
+            <span class="badge <?= $linkedUser['status'] === 'active' ? 'badge-success' : 'badge-neutral' ?>">
+                <?= $linkedUser['status'] === 'active' ? 'نشط' : 'معطّل' ?>
+            </span>
+        </div>
+        <button type="button" class="btn" onclick="resetPassword(<?= (int)$linkedUser['id'] ?>, '<?= e(addslashes($servant['name'])) ?>')">
+            🔑 إعادة تعيين كلمة المرور
+        </button>
+    </div>
+</div>
+
+<script>
+function resetPassword(userId, name) {
+    var pw = prompt('كلمة المرور الجديدة لـ"' + name + '":');
+    if (!pw || pw.length < 6) {
+        if (pw !== null) toast('كلمة المرور قصيرة', 'error');
+        return;
+    }
+
+    var csrf = document.querySelector('meta[name="csrf-token"]').content;
+
+    fetch('/api/users/change-password', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-CSRF-Token': csrf
+        },
+        body: JSON.stringify({ id: userId, new_password: pw })
+    })
+    .then(r => r.json())
+    .then(j => {
+        if (j.success) toast('✅ تم تغيير كلمة المرور', 'success');
+        else toast('❌ ' + (j.message || 'فشل'), 'error');
+    })
+    .catch(e => toast('خطأ: ' + e.message, 'error'));
+}
+</script>
+<?php endif; ?>
     <div class="form-actions">
         <button type="submit" class="btn btn-primary" id="submitBtn">
             حفظ التعديلات

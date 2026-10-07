@@ -16,7 +16,9 @@ class ReportController
             'activity_id' => !empty($_GET['activity_id']) ? (int)$_GET['activity_id'] : null,
             'status'      => $_GET['status']      ?? null,
         ];
-
+if (isChoirAdmin()) {
+    $filters['choir_id'] = (int)currentUser()['choir_id'];
+}
         // جلب السجلات المفلترة
         [$where, $params] = $this->buildRecordsWhere($filters);
 

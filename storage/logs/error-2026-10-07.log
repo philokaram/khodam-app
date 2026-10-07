@@ -1,2 +1,12 @@
 [07-Oct-2026 05:34:35 America/New_York] [FATAL] Cannot redeclare ServantApiController::delete() @ /home/vol14_8/byethost15.com/b15_43071208/htdocs/app/controllers/api/ServantApiController.php:100
 [07-Oct-2026 05:39:23 America/New_York] [FATAL] Cannot redeclare ServantApiController::delete() @ /home/vol14_8/byethost15.com/b15_43071208/htdocs/app/controllers/api/ServantApiController.php:100
+[07-Oct-2026 06:39:39 America/New_York] [UNCAUGHT] Undefined variable $roles @ /home/vol14_8/byethost15.com/b15_43071208/htdocs/app/views/users/index.php:65
+[07-Oct-2026 06:39:49 America/New_York] [UNCAUGHT] Undefined variable $roles @ /home/vol14_8/byethost15.com/b15_43071208/htdocs/app/views/users/index.php:65
+[07-Oct-2026 07:00:14 America/New_York] [hasPermission] SQLSTATE[HY000] [2002] Connection refused
+[07-Oct-2026 07:00:21 America/New_York] [hasPermission] SQLSTATE[HY000] [2002] Connection refused
+[07-Oct-2026 07:00:24 America/New_York] [hasPermission] SQLSTATE[HY000] [2002] Connection refused
+[07-Oct-2026 07:00:25 America/New_York] [hasPermission] SQLSTATE[HY000] [2002] Connection refused
+[07-Oct-2026 07:00:26 America/New_York] [hasPermission] SQLSTATE[HY000] [2002] Connection refused
+[07-Oct-2026 07:00:26 America/New_York] [hasPermission] SQLSTATE[HY000] [2002] Connection refused
+[07-Oct-2026 07:01:01 America/New_York] [UNCAUGHT] Call to undefined function isServant() @ /home/vol14_8/byethost15.com/b15_43071208/htdocs/app/controllers/ProfileController.php:10
+[07-Oct-2026 07:01:10 America/New_York] [UNCAUGHT] Call to undefined function isServant() @ /home/vol14_8/byethost15.com/b15_43071208/htdocs/app/controllers/ProfileController.php:10

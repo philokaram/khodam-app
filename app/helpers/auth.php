@@ -55,3 +55,69 @@ function canAccessChoir(int $choirId): bool
     if (in_array($role, ['SUPER_ADMIN', 'ADMIN'], true)) return true;
     return (int)($u['choir_id'] ?? 0) === $choirId;
 }
+
+/* ============================================================
+   Role Helpers
+============================================================ */
+
+/**
+ * هل المستخدم SUPER_ADMIN؟
+ */
+function isSuperAdmin(): bool
+{
+    $u = currentUser();
+    return $u && ($u['role_name'] ?? '') === 'SUPER_ADMIN';
+}
+
+/**
+ * هل المستخدم ADMIN أو SUPER_ADMIN؟
+ */
+function isAdmin(): bool
+{
+    $u = currentUser();
+    return $u && in_array($u['role_name'] ?? '', ['SUPER_ADMIN', 'ADMIN'], true);
+}
+
+/**
+ * هل المستخدم CHOIR_ADMIN؟
+ */
+function isChoirAdmin(): bool
+{
+    $u = currentUser();
+    return $u && ($u['role_name'] ?? '') === 'CHOIR_ADMIN';
+}
+
+/**
+ * هل المستخدم SERVANT؟
+ */
+function isServant(): bool
+{
+    $u = currentUser();
+    return $u && ($u['role_name'] ?? '') === 'SERVANT';
+}
+
+/**
+ * هل المستخدم ATTENDANCE_USER؟
+ */
+function isAttendanceUser(): bool
+{
+    $u = currentUser();
+    return $u && ($u['role_name'] ?? '') === 'ATTENDANCE_USER';
+}
+
+/**
+ * فلترة الخُوَرَس المسموحة للمستخدم
+ */
+function allowedChoirIds(): array
+{
+    $u = currentUser();
+    if (!$u) return [];
+
+    $role = $u['role_name'] ?? '';
+    if (in_array($role, ['SUPER_ADMIN', 'ADMIN', 'ATTENDANCE_USER'], true)) {
+        return [];
+    }
+
+    $choirId = (int)($u['choir_id'] ?? 0);
+    return $choirId > 0 ? [$choirId] : [];
+}

@@ -78,41 +78,49 @@ class AttendanceController
     }
 
     public function history(): void
-    {
-        requireLogin();
-        requirePermission('attendance.view');
+{
+    requireLogin();
+    requirePermission('attendance.view');
 
-        $filters = [
-            'choir_id'    => $_GET['choir_id'] ?? null,
-            'activity_id' => $_GET['activity_id'] ?? null,
-            'from'        => $_GET['from'] ?? null,
-            'to'          => $_GET['to'] ?? null,
-        ];
-        $where = "WHERE 1=1"; $params = [];
-        if ($filters['choir_id'])    { $where .= " AND ses.choir_id = ?";    $params[] = $filters['choir_id']; }
-        if ($filters['activity_id']) { $where .= " AND ses.activity_id = ?"; $params[] = $filters['activity_id']; }
-        if ($filters['from'])        { $where .= " AND ses.attendance_date >= ?"; $params[] = $filters['from']; }
-        if ($filters['to'])          { $where .= " AND ses.attendance_date <= ?"; $params[] = $filters['to']; }
+    $filters = [
+        'choir_id'    => !empty($_GET['choir_id'])    ? (int)$_GET['choir_id']    : null,
+        'activity_id' => !empty($_GET['activity_id']) ? (int)$_GET['activity_id'] : null,
+        'from'        => $_GET['from'] ?? null,
+        'to'          => $_GET['to']   ?? null,
+    ];
 
-        $sessions = Database::all(
-            "SELECT ses.*, a.name AS activity_name, c.name AS choir_name,
-                    (SELECT COUNT(*) FROM attendance WHERE session_id=ses.id) AS records_count,
-                    (SELECT COUNT(*) FROM attendance WHERE session_id=ses.id AND status='present') AS present_count
-             FROM attendance_sessions ses
-             JOIN activities a ON a.id = ses.activity_id
-             JOIN choirs c ON c.id = ses.choir_id
-             $where
-             ORDER BY ses.attendance_date DESC, ses.id DESC
-             LIMIT 200",
-            $params
-        );
-
-        view('attendance/history', [
-            'title'      => __('attendance.history'),
-            'sessions'   => $sessions,
-            'choirs'     => (new Choir())->all(),
-            'activities' => (new Activity())->all(),
-            'filters'    => $filters,
-        ]);
+    // CHOIR_ADMIN: خورسه فقط
+    if (isChoirAdmin()) {
+        $filters['choir_id'] = (int)currentUser()['choir_id'];
     }
+
+    $where = "WHERE 1=1"; $params = [];
+    if ($filters['choir_id'])    { $where .= " AND ses.choir_id = ?";    $params[] = $filters['choir_id']; }
+    if ($filters['activity_id']) { $where .= " AND ses.activity_id = ?"; $params[] = $filters['activity_id']; }
+    if ($filters['from'])        { $where .= " AND ses.attendance_date >= ?"; $params[] = $filters['from']; }
+    if ($filters['to'])          { $where .= " AND ses.attendance_date <= ?"; $params[] = $filters['to']; }
+
+    $sessions = Database::all(
+        "SELECT ses.*, a.name AS activity_name, c.name AS choir_name,
+                (SELECT COUNT(*) FROM attendance WHERE session_id=ses.id) AS records_count,
+                (SELECT COUNT(*) FROM attendance WHERE session_id=ses.id AND status='present') AS present_count
+         FROM attendance_sessions ses
+         JOIN activities a ON a.id = ses.activity_id
+         JOIN choirs c ON c.id = ses.choir_id
+         $where
+         ORDER BY ses.attendance_date DESC, ses.id DESC
+         LIMIT 200",
+        $params
+    );
+
+    view('attendance/history', [
+        'title'      => __('attendance.history'),
+        'sessions'   => $sessions,
+        'choirs'     => isChoirAdmin()
+                            ? [(new Choir())->find((int)currentUser()['choir_id'])]
+                            : (new Choir())->all(),
+        'activities' => (new Activity())->all(),
+        'filters'    => $filters,
+    ]);
+}
 }

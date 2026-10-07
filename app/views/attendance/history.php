@@ -1,9 +1,20 @@
-<div class="page-head">
-    <h1 class="page-title"><?= e(__('attendance.history')) ?></h1>
+<div class="page-header">
+    <div class="page-header-text">
+        <h1><?= e(__('attendance.history')) ?></h1>
+        <p>
+            <?php if (isChoirAdmin()): ?>
+                سجلات خورس <?= e(currentUser()['choir_name'] ?? '') ?>
+            <?php else: ?>
+                كل سجلات الحضور
+            <?php endif; ?>
+        </p>
+    </div>
     <?php if (hasPermission('attendance.create')): ?>
+    <div class="page-header-actions">
         <a href="<?= e(appBaseUrl()) ?>/attendance/create" class="btn btn-primary">
             + <?= e(__('attendance.register')) ?>
         </a>
+    </div>
     <?php endif; ?>
 </div>
 
@@ -16,6 +27,8 @@
         <span><?= e(__('reports.to')) ?></span>
         <input type="date" name="to" value="<?= e($filters['to'] ?? '') ?>">
     </label>
+
+    <?php if (!isChoirAdmin()): ?>
     <label>
         <span><?= e(__('reports.choir')) ?></span>
         <select name="choir_id">
@@ -27,6 +40,8 @@
             <?php endforeach; ?>
         </select>
     </label>
+    <?php endif; ?>
+
     <label>
         <span><?= e(__('reports.activity')) ?></span>
         <select name="activity_id">
@@ -49,7 +64,7 @@
         <tr>
             <th>التاريخ</th>
             <th>النشاط</th>
-            <th>الخورس</th>
+            <?php if (!isChoirAdmin()): ?><th>الخورس</th><?php endif; ?>
             <th>عدد السجلات</th>
             <th>الحضور</th>
             <th>النسبة</th>
@@ -64,12 +79,16 @@
         <tr>
             <td><?= e(formatDateAr($s['attendance_date'], true)) ?></td>
             <td><?= e($s['activity_name']) ?></td>
-            <td><?= e($s['choir_name']) ?></td>
+            <?php if (!isChoirAdmin()): ?>
+                <td><?= e($s['choir_name']) ?></td>
+            <?php endif; ?>
             <td><?= $total ?></td>
             <td><?= $present ?></td>
-            <td><span class="badge <?= $rate >= 75 ? 'badge-green' : ($rate >= 50 ? 'badge-yellow' : 'badge-red') ?>">
-                <?= $rate ?>%
-            </span></td>
+            <td>
+                <span class="badge <?= $rate >= 75 ? 'badge-success' : ($rate >= 50 ? 'badge-warning' : 'badge-danger') ?>">
+                    <?= $rate ?>%
+                </span>
+            </td>
         </tr>
     <?php endforeach; ?>
     </tbody>

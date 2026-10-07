@@ -46,11 +46,11 @@ $initial = mb_substr($servant['name'] ?? '?', 0, 1);
     </div>
     <div class="page-header-actions">
         <?php if (hasPermission('servants.edit')): ?>
-            <a href="<?= e($base) ?>/servants/edit?id=<?= (int)$servant['id'] ?>" 
-               class="btn btn-primary">
-                تعديل البيانات
-            </a>
-        <?php endif; ?>
+    <a href="<?= e(appBaseUrl()) ?>/servants/edit?id=<?= (int)$servant['id'] ?>" 
+       class="btn btn-primary">
+        تعديل البيانات
+    </a>
+<?php endif; ?>
         <a href="<?= e($base) ?>/reports/servant?id=<?= (int)$servant['id'] ?>" 
            class="btn">
             التقرير الكامل

@@ -1,16 +1,27 @@
 <?php
 $user = currentUser();
 $current = $_SERVER['REQUEST_URI'] ?? '';
+$roleName = $user['role_name'] ?? '';
 
-// عنوان الصفحة الحالية (للجوال)
+// عنوان الصفحة الحالية
 $pageTitle = 'لوحة التحكم';
-if (str_contains($current, '/servants'))    $pageTitle = 'الخدام';
-if (str_contains($current, '/choirs'))      $pageTitle = 'الخُوَرَس';
-if (str_contains($current, '/activities'))  $pageTitle = 'الأنشطة';
-if (str_contains($current, '/attendance/create'))  $pageTitle = 'تسجيل حضور';
-if (str_contains($current, '/attendance/history')) $pageTitle = 'سجل الحضور';
-if (str_contains($current, '/reports'))     $pageTitle = 'التقارير';
-if (str_contains($current, '/users'))       $pageTitle = 'المستخدمون';
+
+if ($roleName === 'SERVANT') {
+    if (str_contains($current, '/servant/history'))      $pageTitle = 'سجل حضوري';
+    elseif (str_contains($current, '/servant/reports'))  $pageTitle = 'تقريري الشخصي';
+    elseif (str_contains($current, '/profile'))          $pageTitle = 'ملفي الشخصي';
+    else                                                  $pageTitle = 'ملفي';
+} else {
+    if (str_contains($current, '/servants'))             $pageTitle = 'الخدام';
+    elseif (str_contains($current, '/choirs'))           $pageTitle = 'الخُوَرَس';
+    elseif (str_contains($current, '/activities'))       $pageTitle = 'الأنشطة';
+    elseif (str_contains($current, '/attendance/create'))  $pageTitle = 'تسجيل حضور';
+    elseif (str_contains($current, '/attendance/history')) $pageTitle = 'سجل الحضور';
+    elseif (str_contains($current, '/reports'))          $pageTitle = 'التقارير';
+    elseif (str_contains($current, '/users'))            $pageTitle = 'المستخدمون';
+    elseif (str_contains($current, '/profile'))          $pageTitle = 'ملفي الشخصي';
+    elseif (str_contains($current, '/dashboard'))        $pageTitle = 'لوحة التحكم';
+}
 
 $roleLabel = $user['role_label'] ?? ($user['role_name'] ?? '');
 ?>
@@ -51,8 +62,8 @@ $roleLabel = $user['role_label'] ?? ($user['role_name'] ?? '');
         </div>
 
         <!-- زر الخروج -->
-        <a href="<?= e(appBaseUrl()) ?>/logout" 
-           class="topbar-action" 
+        <a href="<?= e(appBaseUrl()) ?>/logout"
+           class="topbar-action"
            title="تسجيل الخروج"
            onclick="return confirm('هل تريد تسجيل الخروج؟')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
