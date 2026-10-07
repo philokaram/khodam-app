@@ -52,56 +52,57 @@ class StatisticsService
      * إحصائيات خادم واحد
      */
     public function forServant(int $servantId, array $filters = []): array
-    {
-        $filters['servant_id'] = $servantId;
-        [$where, $params] = $this->buildWhere($filters, 'a', 'ses');
+{
+    $filters['servant_id'] = $servantId;
+    [$where, $params] = $this->buildWhere($filters, 'a', 'ses');
 
-        $sql = "SELECT
-                    COUNT(a.id)                          AS total,
-                    COALESCE(SUM(a.status='present'), 0) AS present,
-                    COALESCE(SUM(a.status='absent'),  0) AS absent,
-                    COALESCE(SUM(a.status='excused'), 0) AS excused
-                FROM attendance a
-                INNER JOIN attendance_sessions ses ON ses.id = a.session_id
-                $where";
+    $sql = "SELECT
+                COUNT(a.id) AS total,
+                COALESCE(SUM(a.status='present'), 0) AS present,
+                COALESCE(SUM(a.status='absent'),  0) AS absent,
+                COALESCE(SUM(a.status='excused'), 0) AS excused
+            FROM attendance a
+            INNER JOIN attendance_sessions ses ON ses.id = a.session_id
+            $where";
 
-        $row = Database::one($sql, $params) ?? [];
-        $total   = (int)($row['total'] ?? 0);
-        $present = (int)($row['present'] ?? 0);
+    $row = Database::one($sql, $params) ?? [];
+    $total = (int)($row['total'] ?? 0);
+    $present = (int)($row['present'] ?? 0);
 
-        return [
-            'total'   => $total,
-            'present' => $present,
-            'absent'  => (int)($row['absent'] ?? 0),
-            'excused' => (int)($row['excused'] ?? 0),
-            'rate'    => $total > 0 ? round($present / $total * 100, 1) : 0.0,
-        ];
-    }
+    return [
+        'total'   => $total,
+        'present' => $present,
+        'absent'  => (int)($row['absent'] ?? 0),
+        'excused' => (int)($row['excused'] ?? 0),
+        'rate'    => $total > 0 ? round($present / $total * 100, 1) : 0.0,
+    ];
+}
 
     /**
      * إحصائيات خادم حسب كل نشاط (ديناميكي)
      */
-    public function forServantByActivity(int $servantId, array $filters = []): array
-    {
-        $filters['servant_id'] = $servantId;
-        [$where, $params] = $this->buildWhere($filters, 'a', 'ses');
+public function forServantByActivity(int $servantId, array $filters = []): array
+{
+    $filters['servant_id'] = $servantId;
+    [$where, $params] = $this->buildWhere($filters, 'a', 'ses');
 
-        $sql = "SELECT
-                    act.id   AS activity_id,
-                    act.name AS activity_name,
-                    COUNT(a.id)                          AS total,
-                    COALESCE(SUM(a.status='present'), 0) AS present,
-                    COALESCE(SUM(a.status='absent'),  0) AS absent,
-                    COALESCE(SUM(a.status='excused'), 0) AS excused
-                FROM attendance a
-                INNER JOIN attendance_sessions ses ON ses.id = a.session_id
-                INNER JOIN activities act ON act.id = ses.activity_id
-                $where
-                GROUP BY act.id, act.name
-                ORDER BY act.id";
-
-        return Database::all($sql, $params);
-    }
+    return Database::all(
+        "SELECT
+            act.id AS activity_id,
+            act.name AS activity_name,
+            COUNT(a.id) AS total,
+            COALESCE(SUM(a.status='present'), 0) AS present,
+            COALESCE(SUM(a.status='absent'),  0) AS absent,
+            COALESCE(SUM(a.status='excused'), 0) AS excused
+         FROM attendance a
+         INNER JOIN attendance_sessions ses ON ses.id = a.session_id
+         INNER JOIN activities act ON act.id = ses.activity_id
+         $where
+         GROUP BY act.id, act.name
+         ORDER BY act.id",
+        $params
+    );
+}
 
     /**
      * إحصائيات خورس

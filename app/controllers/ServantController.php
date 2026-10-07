@@ -106,24 +106,28 @@ $data['emoji'] = $_POST['emoji'] ?? $emojis[array_rand($emojis)];
     }
 
     public function show(): void
-    {
-        requireLogin();
-        requirePermission('servants.view');
-        $id = (int)($_GET['id'] ?? 0);
-        $servant = (new Servant())->find($id);
-        if (!$servant) { http_response_code(404); exit(__('messages.not_found')); }
+{
+    requireLogin();
+    requirePermission('servants.view');
 
-        $stats = (new StatisticsService())->forServant($id);
-        $byActivity = (new StatisticsService())->forServantByActivity($id);
-
-        view('servants/show', [
-            'title'      => $servant['name'],
-            'servant'    => $servant,
-            'stats'      => $stats,
-            'byActivity' => $byActivity,
-        ]);
+    $id = (int)($_GET['id'] ?? 0);
+    $servant = (new Servant())->find($id);
+    if (!$servant) {
+        http_response_code(404);
+        exit(__('messages.not_found'));
     }
 
+    $svc = new StatisticsService();
+    $stats = $svc->forServant($id);
+    $byActivity = $svc->forServantByActivity($id);
+
+    view('servants/show', [
+        'title'      => $servant['name'],
+        'servant'    => $servant,
+        'stats'      => $stats,
+        'byActivity' => $byActivity,
+    ]);
+}
     private function validate(array $d, ?int $id = null): array
     {
         $e = [];

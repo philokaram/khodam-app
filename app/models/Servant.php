@@ -31,14 +31,16 @@ class Servant
         );
     }
 
-    public function find(int $id): ?array
-    {
-        return Database::one(
-            "SELECT s.*, c.name AS choir_name
-             FROM servants s JOIN choirs c ON c.id = s.choir_id
-             WHERE s.id = ?", [$id]
-        );
-    }
+   public function find(int $id): ?array
+{
+    return Database::one(
+        "SELECT s.*, c.name AS choir_name
+         FROM servants s 
+         JOIN choirs c ON c.id = s.choir_id
+         WHERE s.id = ?",
+        [$id]
+    );
+}
 
     public function create(array $d): int
     {
