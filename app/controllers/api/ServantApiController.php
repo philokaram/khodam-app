@@ -120,6 +120,78 @@ class ServantApiController
         apiError('فشل إنشاء الخادم: ' . $e->getMessage(), [], 500);
     }
 }
+    public function parseImport(): void
+{
+    apiRequirePost();
+    apiRequireLogin();
+    apiRequirePermission('servants.create');
+    apiVerifyCsrf();
+
+    if (empty($_FILES['file']) || $_FILES['file']['error'] !== UPLOAD_ERR_OK) {
+        apiError('لم يتم رفع الملف', [], 422);
+    }
+
+    $file = $_FILES['file'];
+
+    $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+    if ($ext !== 'csv') {
+        apiError('الملف يجب أن يكون CSV', [], 422);
+    }
+
+    if ($file['size'] > 2 * 1024 * 1024) {
+        apiError('حجم الملف أكبر من 2 ميجابايت', [], 422);
+    }
+
+    $tmpPath = STORAGE_PATH . '/uploads/import-' . uniqid() . '.csv';
+    if (!is_dir(dirname($tmpPath))) {
+        @mkdir(dirname($tmpPath), 0755, true);
+    }
+    if (!move_uploaded_file($file['tmp_name'], $tmpPath)) {
+        apiError('فشل رفع الملف', [], 500);
+    }
+
+    try {
+        $result = (new ImportService())->parseServantsCsv($tmpPath);
+        @unlink($tmpPath);
+        apiSuccess($result);
+    } catch (Throwable $e) {
+        @unlink($tmpPath);
+        error_log('[parseImport] ' . $e->getMessage());
+        apiError('فشل تحليل الملف: ' . $e->getMessage(), [], 500);
+    }
+}
+
+public function confirmImport(): void
+{
+    apiRequirePost();
+    apiRequireLogin();
+    apiRequirePermission('servants.create');
+    apiVerifyCsrf();
+
+    $in = apiInput();
+    $rows = $in['rows'] ?? [];
+
+    if (!is_array($rows) || empty($rows)) {
+        apiError('لا توجد بيانات للاستيراد', [], 422);
+    }
+
+    try {
+        $result = (new ImportService())->importServants($rows);
+
+        if ($result['imported'] === 0) {
+            apiError('لم يتم استيراد أي خادم', $result['errors'], 422);
+        }
+
+        apiSuccess(
+            $result,
+            "تم استيراد {$result['imported']} خادم بنجاح" .
+            ($result['skipped'] > 0 ? " (تم تخطي {$result['skipped']})" : '')
+        );
+    } catch (Throwable $e) {
+        error_log('[confirmImport] ' . $e->getMessage());
+        apiError('فشل الاستيراد: ' . $e->getMessage(), [], 500);
+    }
+}
 
 private function validateServant(array $d, ?int $id = null): array
 {

@@ -9,10 +9,15 @@
             <?php endif; ?>
         </p>
     </div>
-   <div class="page-header-actions">
+<div class="page-header-actions">
+    <?php if (hasPermission('servants.create')): ?>
+        <a href="<?= e(appBaseUrl()) ?>/servants/import" class="btn">
+            📥 استيراد من Excel
+        </a>
+    <?php endif; ?>
     <?php if (hasPermission('reports.export')): ?>
         <button type="button" class="btn" onclick="exportServants()">
-            📥 تصدير Excel
+            📤 تصدير Excel
         </button>
     <?php endif; ?>
     <?php if (hasPermission('servants.create')): ?>

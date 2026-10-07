@@ -3,7 +3,6 @@ class ExportController
 {
     /**
      * تصدير تقرير الحضور التفصيلي
-     * GET /reports/export/attendance?from=...&to=...&choir_id=...&activity_id=...
      */
     public function attendance(): void
     {
@@ -21,7 +20,6 @@ class ExportController
 
     /**
      * تصدير قائمة الخدام
-     * GET /servants/export?choir_id=...&status=...
      */
     public function servants(): void
     {
@@ -37,7 +35,6 @@ class ExportController
 
     /**
      * تصدير إحصائيات الخدام
-     * GET /reports/export/servants-stats?...
      */
     public function servantsStats(): void
     {
@@ -54,7 +51,6 @@ class ExportController
 
     /**
      * تصدير إحصائيات الأنشطة
-     * GET /reports/export/activities-stats?...
      */
     public function activitiesStats(): void
     {
@@ -66,5 +62,74 @@ class ExportController
             'to'       => $_GET['to']       ?? null,
             'choir_id' => $_GET['choir_id'] ?? null,
         ]);
+    }
+
+    /**
+     * ⭐ قالب استيراد الخدام — مع قائمة الخُوَرَس والتعليمات
+     */
+    public function servantImportTemplate(): void
+    {
+        requireLogin();
+        requirePermission('servants.create');
+
+        // احصل على كل الخُوَرَس
+        $choirs = (new Choir())->all(false);
+        $choirNames = array_column($choirs, 'name');
+
+        // ============ الرؤوس ============
+        $headers = [
+            'الاسم',
+            'الخورس',
+            'الهاتف',
+            'تاريخ الانضمام',
+            'اسم المستخدم',
+            'كلمة المرور',
+            'الإيموجي',
+        ];
+
+        // ============ التعليمات ============
+        $notes = [
+            ['═══════════════ تعليمات ═══════════════', '', '', '', '', '', ''],
+            ['1. الاسم إلزامي', '', '', '', '', '', ''],
+            ['2. الخورس إلزامي — اختر من قائمة الخُوَرَس المتاحة بالأسفل', '', '', '', '', '', ''],
+            ['3. الهاتف اختياري', '', '', '', '', '', ''],
+            ['4. تاريخ الانضمام اختياري (صيغة: 2024-01-15)', '', '', '', '', '', ''],
+            ['5. اسم المستخدم إلزامي (3-50 حرفاً إنجليزياً أو أرقام أو _ أو .)', '', '', '', '', '', ''],
+            ['6. كلمة المرور إلزامية (6 أحرف على الأقل)', '', '', '', '', '', ''],
+            ['7. الإيموجي اختياري (افتراضي: 👤)', '', '', '', '', '', ''],
+            ['8. الكود (S001, S002, ...) يُولَّد تلقائياً — لا تكتبه', '', '', '', '', '', ''],
+            ['', '', '', '', '', '', ''],
+            ['⚠️ احذف كل صفوف التعليمات والأمثلة والخُوَرَس هذه قبل الرفع', '', '', '', '', '', ''],
+            ['', '', '', '', '', '', ''],
+        ];
+
+        // ============ الخُوَرَس المتاحة ============
+        $choirList = [
+            ['═══════════════ الخُوَرَس المتاحة ═══════════════', '', '', '', '', '', ''],
+        ];
+        foreach ($choirNames as $name) {
+            $choirList[] = [$name, '', '', '', '', '', ''];
+        }
+        $choirList[] = ['', '', '', '', '', '', ''];
+
+        // ============ الأمثلة ============
+        $examples = [
+            ['═══════════════ أمثلة (احذفها) ═══════════════', '', '', '', '', '', ''],
+        ];
+
+        foreach (array_slice($choirNames, 0, 3) as $i => $choirName) {
+            $examples[] = [
+                'خادم مثال ' . ($i + 1),
+                $choirName,
+                '0100000000' . ($i + 1),
+                '2024-01-15',
+                'servant' . ($i + 1),
+                'pass' . ($i + 1) . '123',
+                ['😀', '😎', '🥳'][$i] ?? '👤',
+            ];
+        }
+
+        $rows = array_merge([$headers], $notes, $choirList, $examples);
+        (new ExportService())->directCsv('servants-import-template', $rows);
     }
 }

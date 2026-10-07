@@ -27,6 +27,8 @@ $apiRoutes = [
         '/servants/create'     => ['ServantApiController', 'create'],
         '/servants/update'     => ['ServantApiController', 'update'],
         '/servants/delete'     => ['ServantApiController', 'delete'],
+        '/servants/import/parse'   => ['ServantApiController', 'parseImport'],
+    	'/servants/import/confirm' => ['ServantApiController', 'confirmImport'],
 
         '/choirs/create'       => ['ChoirApiController', 'create'],
         '/choirs/update'       => ['ChoirApiController', 'update'],
