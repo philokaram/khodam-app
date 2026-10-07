@@ -13,39 +13,102 @@
 }
 
 /* =====================================================
-   SIDEBAR — نظيف، بلا حدود سميكة
+   APP SIDEBAR — أنيقة جداً مع indicator جانبي
 ===================================================== */
 .app-sidebar {
     background: var(--bg-surface);
-    border-inline-end: var(--border-width) solid var(--border-color);
+    border-inline-end: 1px solid var(--border-color);
     padding: 16px 12px;
     position: sticky;
     top: 0;
     height: 100vh;
     overflow-y: auto;
-    transition: background-color var(--transition);
+    display: flex;
+    flex-direction: column;
+    transition: background var(--transition);
 }
 
+/* ============ Brand ============ */
 .sidebar-brand {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 8px 12px 20px;
-    font-weight: 800;
-    font-size: 16px;
-    color: var(--text-primary);
+    gap: 12px;
+    padding: 10px 12px 24px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid var(--border-color);
+    text-decoration: none;
+    color: inherit;
+    transition: var(--transition-fast);
+}
+
+.sidebar-brand:hover {
+    opacity: 0.85;
 }
 
 .sidebar-brand-icon {
-    width: 32px;
-    height: 32px;
-    background: var(--primary);
-    color: var(--primary-text);
-    border-radius: var(--radius-sm);
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, 
+        var(--primary) 0%, 
+        var(--primary-light) 100%);
+    color: #fff;
+    border-radius: var(--radius-md);
     display: grid;
     place-items: center;
-    font-size: 18px;
+    font-size: 20px;
     flex-shrink: 0;
+    box-shadow: 
+        0 4px 12px color-mix(in srgb, var(--primary) 30%, transparent),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.sidebar-brand-icon::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.3) 0%, 
+        transparent 50%);
+    pointer-events: none;
+}
+
+.sidebar-brand-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    flex: 1;
+}
+
+.sidebar-brand-title {
+    font-weight: 900;
+    font-size: 15px;
+    color: var(--text-primary);
+    letter-spacing: -0.3px;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.sidebar-brand-sub {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.2px;
+}
+
+/* ============ Navigation Sections ============ */
+.sidebar-section {
+    padding: 16px 12px 6px;
+    font-size: 10.5px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-muted);
+    opacity: 0.7;
 }
 
 .sidebar-nav {
@@ -57,22 +120,29 @@
 .sidebar-nav a {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 9px 12px;
-    border-radius: var(--radius);
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: var(--radius-md);
     font-weight: 600;
     font-size: 14px;
     color: var(--text-secondary);
-    transition: all var(--transition-fast);
+    text-decoration: none;
+    transition: 
+        background var(--transition-fast),
+        color var(--transition-fast),
+        transform var(--transition-fast);
     position: relative;
+    overflow: hidden;
 }
 
-.sidebar-nav a svg,
 .sidebar-nav a .nav-icon {
     width: 18px;
     height: 18px;
     flex-shrink: 0;
-    opacity: 0.8;
+    opacity: 0.75;
+    transition: 
+        opacity var(--transition-fast),
+        transform var(--transition-fast);
 }
 
 .sidebar-nav a:hover {
@@ -80,37 +150,122 @@
     color: var(--text-primary);
 }
 
-.sidebar-nav a:hover svg,
 .sidebar-nav a:hover .nav-icon {
     opacity: 1;
+    transform: scale(1.05);
 }
 
+/* Active state — مع indicator جانبي */
 .sidebar-nav a.active {
-    background: var(--primary);
-    color: var(--primary-text);
-    font-weight: 700;
+    background: var(--primary-soft);
+    color: var(--primary);
+    font-weight: 800;
 }
 
-.sidebar-nav a.active svg,
 .sidebar-nav a.active .nav-icon {
     opacity: 1;
 }
 
-/* فاصل بين الأقسام */
+/* Indicator جانبي للـactive */
+.sidebar-nav a.active::before {
+    content: '';
+    position: absolute;
+    inset-inline-start: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 60%;
+    background: var(--primary);
+    border-radius: 0 4px 4px 0;
+    animation: slideInIndicator 250ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideInIndicator {
+    from {
+        height: 0;
+        opacity: 0;
+    }
+    to {
+        height: 60%;
+        opacity: 1;
+    }
+}
+
+/* Dark mode adjustments */
+html[data-theme="dark"] .sidebar-nav a.active {
+    background: color-mix(in srgb, var(--primary) 20%, transparent);
+}
+
+/* ============ Divider ============ */
 .sidebar-divider {
     height: 1px;
     background: var(--border-color);
     margin: 12px 12px;
+    opacity: 0.5;
 }
 
-.sidebar-section {
-    padding: 8px 12px 6px;
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: var(--text-muted);
+/* ============ User Footer في Sidebar ============ */
+.sidebar-footer {
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px solid var(--border-color);
 }
+
+.sidebar-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: var(--radius-md);
+    background: var(--bg-subtle);
+    transition: background var(--transition-fast);
+    text-decoration: none;
+    color: inherit;
+}
+
+.sidebar-user:hover {
+    background: var(--bg-hover);
+}
+
+.sidebar-user-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-full);
+    background: linear-gradient(135deg, 
+        var(--primary) 0%, 
+        var(--primary-light) 100%);
+    color: #fff;
+    display: grid;
+    place-items: center;
+    font-weight: 800;
+    font-size: 14px;
+    flex-shrink: 0;
+    box-shadow: 0 2px 6px color-mix(in srgb, var(--primary) 30%, transparent);
+}
+
+.sidebar-user-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.sidebar-user-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+}
+
+.sidebar-user-role {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 600;
+    line-height: 1.3;
+    margin-top: 1px;
+}
+
 
 /* =====================================================
    MAIN CONTENT
@@ -155,34 +310,64 @@
 }
 
 /* =====================================================
-   TOP BAR (بدل Header التقليدي)
+   APP TOPBAR — أنيقة مع backdrop blur
 ===================================================== */
 .app-topbar {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 12px 40px;
-    background: var(--bg-surface);
-    border-bottom: var(--border-width) solid var(--border-color);
+    padding: 12px 32px;
+    background: color-mix(in srgb, var(--bg-surface) 85%, transparent);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid var(--border-color);
     position: sticky;
     top: 0;
     z-index: 40;
-    transition: background-color var(--transition);
+    transition: 
+        background var(--transition),
+        box-shadow var(--transition);
+    min-height: 64px;
+}
+
+.app-topbar.scrolled {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 
+                0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+html[data-theme="dark"] .app-topbar.scrolled {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), 
+                0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .topbar-spacer {
     flex: 1;
 }
 
+/* Page title في الـTopbar (للجوال) */
+.topbar-title {
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--text-primary);
+    display: none;
+    letter-spacing: -0.2px;
+}
+
+/* ============ Topbar Actions ============ */
 .topbar-action {
-    width: 36px;
-    height: 36px;
-    border-radius: var(--radius);
+    width: 38px;
+    height: 38px;
+    border-radius: var(--radius-md);
     display: grid;
     place-items: center;
     background: transparent;
     color: var(--text-secondary);
-    transition: all var(--transition-fast);
+    border: none;
+    cursor: pointer;
+    transition: 
+        background var(--transition-fast),
+        color var(--transition-fast),
+        transform var(--transition-fast);
     position: relative;
 }
 
@@ -191,43 +376,116 @@
     color: var(--text-primary);
 }
 
+.topbar-action:active {
+    transform: scale(0.95);
+}
+
 .topbar-action svg {
     width: 18px;
     height: 18px;
+    stroke-width: 2;
 }
 
+/* Notification dot */
+.topbar-action.has-dot::after {
+    content: '';
+    position: absolute;
+    top: 8px;
+    inset-inline-end: 8px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--danger);
+    border: 2px solid var(--bg-surface);
+}
+
+/* ============ User Chip ============ */
 .topbar-user {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 6px 12px 6px 6px;
+    padding: 5px 14px 5px 5px;
     border-radius: var(--radius-full);
     background: var(--bg-subtle);
-    transition: all var(--transition-fast);
+    border: 1px solid transparent;
+    transition: 
+        background var(--transition-fast),
+        border-color var(--transition-fast);
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
 }
 
 .topbar-user:hover {
     background: var(--bg-hover);
+    border-color: var(--border-color);
 }
 
 .topbar-avatar {
-    width: 28px;
-    height: 28px;
+    width: 30px;
+    height: 30px;
     border-radius: var(--radius-full);
-    background: var(--primary);
-    color: var(--primary-text);
+    background: linear-gradient(135deg, 
+        var(--primary) 0%, 
+        var(--primary-light) 100%);
+    color: #fff;
     display: grid;
     place-items: center;
-    font-weight: 700;
+    font-weight: 800;
     font-size: 13px;
+    flex-shrink: 0;
+    box-shadow: 0 2px 6px color-mix(in srgb, var(--primary) 30%, transparent);
 }
 
 .topbar-username {
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--text-primary);
+    white-space: nowrap;
+    letter-spacing: -0.1px;
 }
 
+.topbar-user-meta {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.topbar-user-role {
+    font-size: 10.5px;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-top: 1px;
+}
+
+/* ============ Mobile ============ */
+@media (max-width: 900px) {
+    .app-topbar {
+        padding: 10px 16px;
+        min-height: 58px;
+    }
+
+    .topbar-title {
+        display: block;
+    }
+
+    .topbar-user-meta {
+        display: none;
+    }
+
+    .topbar-user {
+        padding: 4px;
+        background: transparent;
+    }
+
+    .topbar-user:hover {
+        background: var(--bg-hover);
+    }
+
+    .sidebar-footer {
+        display: none; /* User موجود في Topbar للجوال */
+    }
+}
 /* =====================================================
    AUTH PAGE
 ===================================================== */

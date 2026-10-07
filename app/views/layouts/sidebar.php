@@ -1,13 +1,23 @@
 <?php
 $base = appBaseUrl();
+$user = currentUser();
 $current = $_SERVER['REQUEST_URI'] ?? '';
 $is = fn(string $p) => str_contains($current, $p);
+$roleLabel = $user['role_label'] ?? ($user['role_name'] ?? 'مستخدم');
 ?>
 <aside class="app-sidebar">
-    <div class="sidebar-brand">
+
+    <!-- Brand -->
+    <a href="<?= e($base) ?>/dashboard" class="sidebar-brand">
         <div class="sidebar-brand-icon">⛪</div>
-        <span>حضور الخدام</span>
-    </div>
+        <div class="sidebar-brand-text">
+            <div class="sidebar-brand-title">حضور الخدام</div>
+            <div class="sidebar-brand-sub">نظام المتابعة</div>
+        </div>
+    </a>
+
+    <!-- القسم الرئيسي -->
+    <div class="sidebar-section">الرئيسية</div>
 
     <nav class="sidebar-nav">
         <a href="<?= e($base) ?>/dashboard" class="<?= $is('/dashboard') ? 'active' : '' ?>">
@@ -47,7 +57,7 @@ $is = fn(string $p) => str_contains($current, $p);
         </a>
     </nav>
 
-    <div class="sidebar-divider"></div>
+    <!-- قسم الحضور -->
     <div class="sidebar-section">الحضور</div>
 
     <nav class="sidebar-nav">
@@ -67,7 +77,8 @@ $is = fn(string $p) => str_contains($current, $p);
         </a>
     </nav>
 
-    <div class="sidebar-divider"></div>
+    <!-- قسم التقارير -->
+    <div class="sidebar-section">الإدارة</div>
 
     <nav class="sidebar-nav">
         <a href="<?= e($base) ?>/reports" class="<?= $is('/reports') ? 'active' : '' ?>">
@@ -85,4 +96,20 @@ $is = fn(string $p) => str_contains($current, $p);
             المستخدمون
         </a>
     </nav>
+
+    <!-- User في أسفل Sidebar -->
+    <?php if ($user): ?>
+    <div class="sidebar-footer">
+        <div class="sidebar-user">
+            <div class="sidebar-user-avatar">
+                <?= e(mb_substr($user['name'] ?? 'U', 0, 1)) ?>
+            </div>
+            <div class="sidebar-user-info">
+                <div class="sidebar-user-name"><?= e($user['name'] ?? '') ?></div>
+                <div class="sidebar-user-role"><?= e($roleLabel) ?></div>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
+
 </aside>

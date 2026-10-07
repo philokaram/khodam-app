@@ -78,18 +78,10 @@ async function api(url, options = {}) {
 }
 
 /* ============================================================
-   Theme Toggle
+   Theme Toggle — محدث ليدعم الأيقونة الجديدة
 ============================================================ */
-(function initTheme() {
-    const saved = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const theme = saved || (prefersDark ? 'dark' : 'light');
-    
-    document.documentElement.setAttribute('data-theme', theme);
-})();
-
 function updateThemeButton(theme) {
-    const btn = document.querySelector('.theme-toggle');
+    const btn = document.querySelector('.theme-icon');
     if (btn) {
         btn.textContent = theme === 'dark' ? '☀️' : '🌙';
     }
@@ -100,13 +92,20 @@ function toggleTheme() {
     const next = current === 'dark' ? 'light' : 'dark';
     
     document.documentElement.setAttribute('data-theme', next);
-    localStorage.setItem('theme', next);
+    try { localStorage.setItem('theme', next); } catch(e) {}
     updateThemeButton(next);
     
-    if (typeof toast === 'function') {
-        toast(next === 'dark' ? '🌙 الوضع الليلي' : '☀️ الوضع النهاري', 'info');
-    }
+    // أطلق حدث
+    window.dispatchEvent(new CustomEvent('themeChanged', { detail: { theme: next } }));
 }
+
+window.toggleTheme = toggleTheme;
+
+// حدّث الزر عند التحميل
+document.addEventListener('DOMContentLoaded', function() {
+    const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+    updateThemeButton(currentTheme);
+});
 
 /* ============================================================
    Auto-dismiss existing toasts
@@ -142,17 +141,14 @@ if ('serviceWorker' in navigator && location.protocol === 'https:') {
 /* ============================================================
    Header Shadow on Scroll
 ============================================================ */
-(function initHeaderScroll() {
-    const header = document.querySelector('.app-header');
-    if (!header) return;
-
-    let lastScroll = 0;
+(function() {
+    const topbar = document.querySelector('.app-topbar');
+    if (!topbar) return;
     
     function onScroll() {
-        const scrolled = window.scrollY > 8;
-        header.classList.toggle('scrolled', scrolled);
+        topbar.classList.toggle('scrolled', window.scrollY > 8);
     }
-
+    
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
 })();
