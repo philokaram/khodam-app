@@ -1,0 +1,77 @@
+# ============================================================
+# Environment
+# ============================================================
+.env
+.env.local
+.env.*.local
+
+# ============================================================
+# Storage (لا ترفع بيانات حقيقية)
+# ============================================================
+storage/logs/*
+!storage/logs/.gitkeep
+storage/uploads/*
+!storage/uploads/.gitkeep
+storage/exports/*
+!storage/exports/.gitkeep
+storage/sessions/*
+!storage/sessions/.gitkeep
+storage/*.log
+storage/debug.log
+
+# ============================================================
+# IDE
+# ============================================================
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*~
+.DS_Store
+
+# ============================================================
+# Debug/Test files
+# ============================================================
+setup.php
+debug-*.php
+test-*.php
+hosting-test.php
+php-check.php
+env-check.php
+index-debug.php
+session-debug.php
+csrf-test.php
+hash.php
+diagnose.php
+read-debug.php
+check-manifest.php
+make-icons.php
+
+# ============================================================
+# Node (إن استُخدم لاحقاً)
+# ============================================================
+node_modules/
+package-lock.json
+yarn.lock
+
+# ============================================================
+# Composer (إن استُخدم لاحقاً)
+# ============================================================
+vendor/
+composer.lock
+
+# ============================================================
+# Backups
+# ============================================================
+*.bak
+*.backup
+*.sql.gz
+backup-*.sql
+
+# ============================================================
+# OS
+# ============================================================
+Thumbs.db
+Desktop.ini
