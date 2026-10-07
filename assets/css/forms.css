@@ -1,105 +1,160 @@
-/* ============ Forms ============ */
-.form { display: grid; gap: 16px; }
+/* =====================================================
+   FORMS — نظيفة، هادئة
+===================================================== */
+.form {
+    display: grid;
+    gap: 16px;
+}
 
-.form label {
+.form-group {
     display: grid;
     gap: 6px;
-    font-weight: 800;
-    font-size: 14px;
-    color: var(--ink);
 }
 
-.form input,
+.form-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.form-hint {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.form-input,
 .form select,
-.form textarea {
+.form textarea,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="date"],
+input[type="tel"],
+input[type="search"],
+input[type="number"],
+select,
+textarea {
     width: 100%;
-    min-height: 46px;
-    padding: 10px 16px;
-    border: var(--border);
-    border-radius: var(--radius-sm);
-    background: var(--card);
-    color: var(--ink);
-    font-size: 15px;
-    transition: var(--transition);
+    height: 40px;
+    padding: 0 12px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all var(--transition-fast);
 }
 
-.form input:focus,
-.form select:focus,
-.form textarea:focus {
+textarea {
+    height: auto;
+    min-height: 100px;
+    padding: 10px 12px;
+    resize: vertical;
+    line-height: 1.5;
+}
+
+input:hover:not(:disabled):not(:focus),
+select:hover:not(:disabled):not(:focus),
+textarea:hover:not(:disabled):not(:focus) {
+    border-color: var(--border-strong);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
     outline: none;
-    border-color: var(--yellow);
-    box-shadow: 0 0 0 3px rgba(255, 210, 63, 0.25);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 15%, transparent);
 }
 
-/* ============ Filters Bar ============ */
+input:disabled,
+select:disabled,
+textarea:disabled {
+    background: var(--bg-subtle);
+    color: var(--text-disabled);
+    cursor: not-allowed;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: var(--text-disabled);
+}
+
+/* =====================================================
+   FILTERS BAR — نظيفة جداً
+===================================================== */
 .filters-bar {
     display: flex;
     gap: 12px;
     flex-wrap: wrap;
     align-items: flex-end;
-    background: var(--card);
-    border: var(--border);
-    border-radius: var(--radius);
-    padding: 18px 20px;
-    box-shadow: var(--shadow-sm);
-    margin-bottom: 24px;
+    padding: 16px 20px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    margin-bottom: 20px;
 }
 
 .filters-bar label {
     display: grid;
-    gap: 6px;
-    font-weight: 700;
-    font-size: 13px;
+    gap: 4px;
     flex: 1 1 160px;
-    color: var(--ink);
+    min-width: 0;
 }
 
 .filters-bar label span {
-    color: var(--muted);
     font-size: 12px;
-    font-weight: 700;
+    font-weight: 600;
+    color: var(--text-muted);
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.3px;
 }
 
 .filters-bar input,
 .filters-bar select {
-    width: 100%;
-    min-height: 42px;
-    padding: 8px 14px;
-    border: var(--border-soft);
-    border-radius: var(--radius-sm);
-    background: var(--card);
-    color: var(--ink);
-    font-size: 14px;
-    font-weight: 600;
-    transition: var(--transition);
+    height: 36px;
+    font-size: 13px;
+    padding: 0 10px;
 }
 
-.filters-bar input:focus,
-.filters-bar select:focus {
-    outline: none;
-    border-color: var(--yellow);
-    box-shadow: 0 0 0 3px rgba(255, 210, 63, 0.25);
-}
-
-/* ============ Form Box ============ */
-.form-box {
-    background: var(--card);
-    border: var(--border);
+/* =====================================================
+   FORM CONTAINER (لصفحات الإضافة)
+===================================================== */
+.form-container {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
     border-radius: var(--radius-lg);
-    box-shadow: var(--shadow);
     padding: 28px;
     max-width: 640px;
-    display: grid;
-    gap: 20px;
+    box-shadow: var(--shadow-card);
 }
 
 .form-actions {
     display: flex;
-    gap: 12px;
-    margin-top: 12px;
-    flex-wrap: wrap;
+    gap: 8px;
+    padding-top: 20px;
+    margin-top: 8px;
+    border-top: 1px solid var(--border-color);
 }
 
-.form-actions .btn { flex: 1; min-width: 120px; }
+/* =====================================================
+   CHECKBOX
+===================================================== */
+.check {
+    display: flex !important;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500 !important;
+    cursor: pointer;
+    padding: 8px 0;
+}
+
+.check input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    accent-color: var(--primary);
+    cursor: pointer;
+}

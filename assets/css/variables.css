@@ -1,143 +1,142 @@
-/* =====================================================
-   LIGHT THEME — ألوان ناعمة ومتناسقة
-===================================================== */
 :root,
 html[data-theme="light"] {
-    --bg: #F4F1EA;
-    --bg-alt: #EBE6DB;
-    --bg-elevated: #FFFFFF;
+    /* ============ الخلفيات — دافئة، ليست بيضاء نقية ============ */
+    --bg-page:      #F7F5F0;    /* بيج فاتح جداً */
+    --bg-surface:   #FDFCFA;    /* أبيض دافئ (ليس نقي) */
+    --bg-subtle:    #F1EDE5;    /* أعمق قليلاً */
+    --bg-hover:     #EBE7DD;
+    --bg-active:    #E3DDD0;
     
-    --card: #FFFFFF;
-    --card-hover: #FDFCF8;
+    /* ============ النصوص — رمادي دافئ، ليس أسود ============ */
+    --text-primary:   #1F1D1B;   /* شبه أسود دافئ */
+    --text-secondary: #57534E;
+    --text-muted:     #7D7770;
+    --text-disabled:  #B0ABA3;
     
-    --ink: #1A2E2A;
-    --ink-soft: #2D4A42;
-    --muted: #6B7F78;
-    --muted-light: #A8B5AF;
-    --line: #E0DBD0;
+    /* ============ الحدود ============ */
+    --border-color:  #E5E0D5;
+    --border-strong: #D2CCBE;
     
-    /* ألوان العلامة */
-    --yellow: #F5C842;
-    --yellow-soft: #FEF3D0;
-    --orange: #E8752F;
-    --orange-soft: #FEE4D4;
-    --green: #2BAE74;
-    --green-soft: #D4F0E2;
-    --red: #E84D5B;
-    --red-soft: #FCDDE0;
-    --sky: #3BA9E0;
-    --sky-soft: #D6ECF8;
-    --pink: #E67BA3;
-    --purple: #8B6FD4;
+    /* ============ اللون الأساسي — Teal عميق وأنيق ============ */
+    --primary:        #0F766E;
+    --primary-hover:  #115E59;
+    --primary-light:  #14B8A6;
+    --primary-soft:   #CCFBF1;
+    --primary-text:   #FFFFFF;
     
-    /* تدرجات الخلفية */
-    --mesh-1: rgba(245, 200, 66, 0.35);
-    --mesh-2: rgba(59, 169, 224, 0.22);
-    --mesh-3: rgba(232, 117, 47, 0.18);
+    /* ============ ألوان دلالية غنية ============ */
+    --success:        #059669;
+    --success-soft:   #D1FAE5;
+    --success-text:   #064E3B;
     
-    /* الحدود والظلال */
-    --border: 2px solid var(--ink);
-    --border-soft: 1.5px solid var(--ink);
-    --shadow: 4px 4px 0 var(--ink);
-    --shadow-sm: 3px 3px 0 var(--ink);
-    --shadow-lg: 6px 6px 0 var(--ink);
+    --danger:         #DC2626;
+    --danger-soft:    #FEE2E2;
+    --danger-text:    #7F1D1D;
     
-    /* الحواف */
-    --radius-sm: 12px;
-    --radius: 18px;
-    --radius-lg: 24px;
-    --radius-xl: 32px;
+    --warning:        #D97706;
+    --warning-soft:   #FEF3C7;
+    --warning-text:   #78350F;
     
-    --font: 'Cairo', Tahoma, 'Segoe UI', sans-serif;
-    --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    --info:           #0891B2;
+    --info-soft:      #CFFAFE;
+    --info-text:      #164E63;
+    
+    /* ============ ظلال ناعمة ومتدرجة ============ */
+    --shadow-xs: 0 1px 2px 0 rgba(31, 29, 27, 0.04);
+    --shadow-sm: 0 1px 3px 0 rgba(31, 29, 27, 0.06), 
+                 0 1px 2px -1px rgba(31, 29, 27, 0.04);
+    --shadow-md: 0 4px 8px -2px rgba(31, 29, 27, 0.08), 
+                 0 2px 4px -2px rgba(31, 29, 27, 0.05);
+    --shadow-lg: 0 10px 20px -5px rgba(31, 29, 27, 0.10), 
+                 0 4px 8px -4px rgba(31, 29, 27, 0.06);
+    --shadow-xl: 0 20px 30px -10px rgba(31, 29, 27, 0.12), 
+                 0 8px 12px -6px rgba(31, 29, 27, 0.06);
+    
+    /* ظل مميز للبطاقات (أعمق قليلاً) */
+    --shadow-card: 0 1px 2px rgba(31, 29, 27, 0.04),
+                   0 4px 12px rgba(31, 29, 27, 0.05);
+    
+    --shadow-card-hover: 0 2px 4px rgba(31, 29, 27, 0.06),
+                         0 12px 24px rgba(31, 29, 27, 0.08);
+    
+    /* ============ الحواف ============ */
+    --radius-xs: 4px;
+    --radius-sm: 6px;
+    --radius: 8px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --radius-xl: 18px;
+    --radius-full: 9999px;
+    
+    /* ============ الخط ============ */
+    --font: 'Cairo', system-ui, -apple-system, sans-serif;
+    --font-mono: ui-monospace, 'SF Mono', Consolas, monospace;
+    
+    /* ============ الانتقالات ============ */
+    --transition-fast: 120ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition: 180ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 250ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* =====================================================
-   DARK THEME — ألوان دافئة ومريحة (ليست سوداء قاتمة)
+   DARK THEME — دافئ وليس أسود نقي
 ===================================================== */
 html[data-theme="dark"] {
-    --bg: #1A2420;
-    --bg-alt: #212E29;
-    --bg-elevated: #2A3833;
+    /* الخلفيات — رمادي-بني دافئ، ليس أسود */
+    --bg-page:      #171614;      /* ليس #000 */
+    --bg-surface:   #1F1E1B;      /* ليس #0C0A09 */
+    --bg-subtle:    #292723;
+    --bg-hover:     #2F2D28;
+    --bg-active:    #3A3731;
     
-    --card: #2A3833;
-    --card-hover: #33443E;
+    /* النصوص — أبيض دافئ، ليس نقي */
+    --text-primary:   #F5F1E8;    /* ليس #FFFFFF */
+    --text-secondary: #C7C1B5;
+    --text-muted:     #928C80;
+    --text-disabled:  #5A554C;
     
-    --ink: #F5EFE0;
-    --ink-soft: #D8CFB8;
-    --muted: #9BA89E;
-    --muted-light: #6B7A72;
-    --line: #3A4A43;
+    /* الحدود */
+    --border-color:  #2F2D28;
+    --border-strong: #423F38;
     
-    /* ألوان ساطعة في الوضع الليلي */
-    --yellow: #FFD23F;
-    --yellow-soft: rgba(255, 210, 63, 0.15);
-    --orange: #FF8F4D;
-    --orange-soft: rgba(255, 143, 77, 0.15);
-    --green: #3FD992;
-    --green-soft: rgba(63, 217, 146, 0.15);
-    --red: #FF6371;
-    --red-soft: rgba(255, 99, 113, 0.15);
-    --sky: #5CC8FF;
-    --sky-soft: rgba(92, 200, 255, 0.15);
-    --pink: #FF8FB1;
-    --purple: #A78BFA;
+    /* اللون الأساسي — Teal أكثر سطوعاً في الوضع الليلي */
+    --primary:        #14B8A6;
+    --primary-hover:  #2DD4BF;
+    --primary-light:  #5EEAD4;
+    --primary-soft:   #134E4A;
+    --primary-text:   #0F2C28;
     
-    /* تدرجات الخلفية للوضع الليلي */
-    --mesh-1: rgba(255, 210, 63, 0.10);
-    --mesh-2: rgba(92, 200, 255, 0.08);
-    --mesh-3: rgba(255, 143, 77, 0.08);
+    /* ألوان دلالية */
+    --success:        #10B981;
+    --success-soft:   #064E3B;
+    --success-text:   #A7F3D0;
     
-    /* الحدود والظلال */
-    --border: 2px solid #F5EFE0;
-    --border-soft: 1.5px solid #7A8A82;
-    --shadow: 4px 4px 0 #000;
-    --shadow-sm: 3px 3px 0 #000;
-    --shadow-lg: 6px 6px 0 #000;
-}
-
-/* =====================================================
-   Body + Mesh Background
-===================================================== */
-* {
-    box-sizing: border-box;
-}
-
-html {
-    transition: background-color 0.4s ease;
-}
-
-body {
-    margin: 0;
-    min-height: 100vh;
-    font-family: var(--font);
-    background: var(--bg);
-    color: var(--ink);
-    line-height: 1.65;
-    -webkit-font-smoothing: antialiased;
-    transition: background 0.4s ease, color 0.3s ease;
-    position: relative;
-}
-
-/* Mesh gradient قوي وواضح */
-body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    pointer-events: none;
-    background:
-        radial-gradient(ellipse 800px 600px at 10% 0%, var(--mesh-1) 0%, transparent 60%),
-        radial-gradient(ellipse 700px 700px at 90% 20%, var(--mesh-2) 0%, transparent 55%),
-        radial-gradient(ellipse 900px 500px at 50% 100%, var(--mesh-3) 0%, transparent 60%),
-        var(--bg);
-    transition: background 0.5s ease;
-}
-
-html[data-theme="dark"] body::before {
-    background:
-        radial-gradient(ellipse 800px 600px at 10% 0%, var(--mesh-1) 0%, transparent 55%),
-        radial-gradient(ellipse 700px 700px at 90% 20%, var(--mesh-2) 0%, transparent 50%),
-        radial-gradient(ellipse 900px 500px at 50% 100%, var(--mesh-3) 0%, transparent 55%),
-        var(--bg);
+    --danger:         #EF4444;
+    --danger-soft:    #7F1D1D;
+    --danger-text:    #FECACA;
+    
+    --warning:        #F59E0B;
+    --warning-soft:   #78350F;
+    --warning-text:   #FDE68A;
+    
+    --info:           #06B6D4;
+    --info-soft:      #164E63;
+    --info-text:      #A5F3FC;
+    
+    /* ظلال أقوى قليلاً في الـdark */
+    --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+    --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 
+                 0 1px 2px -1px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 8px -2px rgba(0, 0, 0, 0.5), 
+                 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 10px 20px -5px rgba(0, 0, 0, 0.6), 
+                 0 4px 8px -4px rgba(0, 0, 0, 0.4);
+    --shadow-xl: 0 20px 30px -10px rgba(0, 0, 0, 0.7), 
+                 0 8px 12px -6px rgba(0, 0, 0, 0.4);
+    
+    --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3),
+                   0 4px 12px rgba(0, 0, 0, 0.25);
+    
+    --shadow-card-hover: 0 2px 4px rgba(0, 0, 0, 0.4),
+                         0 12px 24px rgba(0, 0, 0, 0.35);
 }

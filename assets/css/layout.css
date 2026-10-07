@@ -1,375 +1,325 @@
 /* =====================================================
-   APP HEADER
-===================================================== */
-.app-header {
-    position: sticky;
-    top: 0;
-    z-index: 50;
-    background: var(--card);
-    border-bottom: var(--border);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-}
-
-html[data-theme="dark"] .app-header {
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-}
-
-.app-header-inner {
-    max-width: 1400px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 24px;
-}
-
-.app-logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-weight: 900;
-    font-size: 18px;
-    color: var(--ink);
-    text-decoration: none;
-    transition: var(--transition);
-}
-
-.app-logo::before {
-    content: '⛪';
-    width: 42px;
-    height: 42px;
-    background: linear-gradient(135deg, var(--yellow) 0%, var(--orange) 100%);
-    border: var(--border-soft);
-    border-radius: 14px;
-    display: grid;
-    place-items: center;
-    font-size: 22px;
-    box-shadow: var(--shadow-sm);
-    transition: var(--transition);
-}
-
-.app-logo:hover::before {
-    transform: rotate(-8deg) scale(1.05);
-}
-
-.logo-text {
-    display: inline-block;
-}
-
-/* ============ Theme Toggle ============ */
-.theme-toggle {
-    width: 44px;
-    height: 44px;
-    background: var(--card);
-    border: var(--border-soft);
-    border-radius: 50%;
-    display: grid;
-    place-items: center;
-    font-size: 20px;
-    cursor: pointer;
-    transition: var(--transition);
-    box-shadow: var(--shadow-sm);
-    color: var(--ink);
-    padding: 0;
-    line-height: 1;
-}
-
-.theme-toggle:hover {
-    transform: rotate(20deg) scale(1.08);
-    box-shadow: var(--shadow);
-    background: var(--yellow-soft);
-}
-
-.theme-toggle:active {
-    transform: rotate(20deg) scale(0.95);
-}
-
-/* ============ User Info ============ */
-.app-user {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-inline-start: auto;
-}
-
-.app-user > span {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 6px 14px;
-    background: var(--bg-alt);
-    border: var(--border-soft);
-    border-radius: 99px;
-    font-weight: 700;
-    font-size: 14px;
-    color: var(--ink);
-}
-
-.app-user > span::before {
-    content: '👤';
-    font-size: 16px;
-}
-
-.app-user .btn-sm {
-    padding: 8px 14px;
-    min-height: 38px;
-    font-size: 13px;
-}
-
-.logout-text {
-    margin-inline-start: 4px;
-}
-
-/* ============ Menu Toggle (mobile) ============ */
-.menu-toggle {
-    display: none;
-    background: var(--card);
-    border: var(--border-soft);
-    border-radius: var(--radius-sm);
-    padding: 8px 12px;
-    font-size: 20px;
-    cursor: pointer;
-    color: var(--ink);
-    box-shadow: var(--shadow-sm);
-    transition: var(--transition);
-}
-
-/* =====================================================
    APP SHELL
 ===================================================== */
+.app-body {
+    min-height: 100vh;
+    background: var(--bg-page);
+}
+
 .app-shell {
     display: grid;
-    grid-template-columns: 260px 1fr;
-    min-height: calc(100vh - 70px);
-    max-width: 1400px;
-    margin: 0 auto;
+    grid-template-columns: 240px 1fr;
+    min-height: 100vh;
 }
 
 /* =====================================================
-   SIDEBAR
+   SIDEBAR — نظيف، بلا حدود سميكة
 ===================================================== */
 .app-sidebar {
-    background: var(--card);
-    border-inline-end: var(--border);
-    padding: 20px 14px;
+    background: var(--bg-surface);
+    border-inline-end: var(--border-width) solid var(--border-color);
+    padding: 16px 12px;
     position: sticky;
-    top: 70px;
-    height: calc(100vh - 70px);
+    top: 0;
+    height: 100vh;
     overflow-y: auto;
+    transition: background-color var(--transition);
 }
 
-.app-sidebar nav {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-.app-sidebar a {
+.sidebar-brand {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 12px 16px;
-    border-radius: var(--radius-sm);
-    font-weight: 700;
-    font-size: 15px;
-    color: var(--ink);
-    text-decoration: none;
-    transition: var(--transition);
-    border: 2px solid transparent;
-    position: relative;
+    gap: 10px;
+    padding: 8px 12px 20px;
+    font-weight: 800;
+    font-size: 16px;
+    color: var(--text-primary);
 }
 
-.app-sidebar a::before {
-    content: '';
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--muted-light);
-    transition: var(--transition);
+.sidebar-brand-icon {
+    width: 32px;
+    height: 32px;
+    background: var(--primary);
+    color: var(--primary-text);
+    border-radius: var(--radius-sm);
+    display: grid;
+    place-items: center;
+    font-size: 18px;
     flex-shrink: 0;
 }
 
-.app-sidebar a::after {
-    margin-inline-start: auto;
-    font-size: 18px;
-    opacity: 0.7;
-    transition: var(--transition);
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
 }
 
-.app-sidebar a[href*="dashboard"]::after { content: '📊'; }
-.app-sidebar a[href*="servants"]::after { content: '👥'; }
-.app-sidebar a[href*="choirs"]::after { content: '🎵'; }
-.app-sidebar a[href*="activities"]::after { content: '📅'; }
-.app-sidebar a[href*="attendance/create"]::after { content: '✅'; }
-.app-sidebar a[href*="attendance/history"]::after { content: '📜'; }
-.app-sidebar a[href*="reports"]::after { content: '📈'; }
-.app-sidebar a[href*="users"]::after { content: '🔐'; }
-
-.app-sidebar a:hover {
-    background: var(--bg-alt);
-    transform: translateX(-4px);
+.sidebar-nav a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: var(--radius);
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text-secondary);
+    transition: all var(--transition-fast);
+    position: relative;
 }
 
-.app-sidebar a:hover::before {
-    background: var(--yellow);
-    transform: scale(1.4);
+.sidebar-nav a svg,
+.sidebar-nav a .nav-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    opacity: 0.8;
 }
 
-.app-sidebar a.on {
-    background: linear-gradient(135deg, var(--yellow) 0%, var(--orange) 100%);
-    color: #1A2E2A;
-    border-color: var(--ink);
-    box-shadow: var(--shadow-sm);
-    transform: translateX(-2px);
+.sidebar-nav a:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
 }
 
-.app-sidebar a.on::before {
-    background: #1A2E2A;
-    transform: scale(1.5);
-}
-
-.app-sidebar a.on::after {
+.sidebar-nav a:hover svg,
+.sidebar-nav a:hover .nav-icon {
     opacity: 1;
 }
 
-/* =====================================================
-   MAIN
-===================================================== */
-.app-main {
-    padding: 28px 32px 80px;
-    min-width: 0;
+.sidebar-nav a.active {
+    background: var(--primary);
+    color: var(--primary-text);
+    font-weight: 700;
+}
+
+.sidebar-nav a.active svg,
+.sidebar-nav a.active .nav-icon {
+    opacity: 1;
+}
+
+/* فاصل بين الأقسام */
+.sidebar-divider {
+    height: 1px;
+    background: var(--border-color);
+    margin: 12px 12px;
+}
+
+.sidebar-section {
+    padding: 8px 12px 6px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
 }
 
 /* =====================================================
-   FOOTER
+   MAIN CONTENT
 ===================================================== */
-.app-footer {
-    text-align: center;
-    padding: 24px;
-    color: var(--muted);
+.app-main {
+    padding: 32px 40px 80px;
+    max-width: 1400px;
+    min-width: 0;
+    transition: background-color var(--transition);
+}
+
+/* =====================================================
+   PAGE HEADER
+===================================================== */
+.page-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.page-header-text h1 {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--text-primary);
+    letter-spacing: -0.5px;
+    margin-bottom: 4px;
+}
+
+.page-header-text p {
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+.page-header-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+/* =====================================================
+   TOP BAR (بدل Header التقليدي)
+===================================================== */
+.app-topbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 40px;
+    background: var(--bg-surface);
+    border-bottom: var(--border-width) solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    transition: background-color var(--transition);
+}
+
+.topbar-spacer {
+    flex: 1;
+}
+
+.topbar-action {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius);
+    display: grid;
+    place-items: center;
+    background: transparent;
+    color: var(--text-secondary);
+    transition: all var(--transition-fast);
+    position: relative;
+}
+
+.topbar-action:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+}
+
+.topbar-action svg {
+    width: 18px;
+    height: 18px;
+}
+
+.topbar-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 12px 6px 6px;
+    border-radius: var(--radius-full);
+    background: var(--bg-subtle);
+    transition: all var(--transition-fast);
+}
+
+.topbar-user:hover {
+    background: var(--bg-hover);
+}
+
+.topbar-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: var(--radius-full);
+    background: var(--primary);
+    color: var(--primary-text);
+    display: grid;
+    place-items: center;
+    font-weight: 700;
     font-size: 13px;
 }
 
+.topbar-username {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
 /* =====================================================
-   AUTH
+   AUTH PAGE
 ===================================================== */
 .auth-body {
     min-height: 100vh;
     display: grid;
     place-items: center;
     padding: 20px;
+    background: var(--bg-page);
 }
 
 .auth-wrap {
     width: 100%;
-    max-width: 440px;
+    max-width: 400px;
 }
 
 .auth-card {
-    background: var(--card);
-    border: var(--border);
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow-lg);
-    padding: 40px 36px 32px;
-    animation: authIn 0.4s ease-out;
+    padding: 40px 32px 32px;
 }
 
-@keyframes authIn {
-    from { opacity: 0; transform: translateY(20px) scale(0.98); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
+.auth-header {
+    text-align: center;
+    margin-bottom: 32px;
 }
-
-.auth-header { text-align: center; margin-bottom: 28px; }
 
 .auth-logo {
-    width: 88px;
-    height: 88px;
-    margin: 0 auto 18px;
-    background: linear-gradient(135deg, var(--yellow) 0%, var(--orange) 100%);
-    border: var(--border);
-    border-radius: 26px;
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 20px;
+    background: var(--primary);
+    color: var(--primary-text);
+    border-radius: var(--radius-lg);
     display: grid;
     place-items: center;
-    font-size: 44px;
-    box-shadow: var(--shadow);
-    animation: pulse 3s ease-in-out infinite;
-}
-
-@keyframes pulse {
-    0%, 100% { transform: scale(1) rotate(0deg); }
-    50% { transform: scale(1.06) rotate(-3deg); }
+    font-size: 30px;
 }
 
 .auth-header h1 {
-    font-size: 26px;
-    font-weight: 900;
-    margin: 0 0 8px;
-    color: var(--ink);
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 6px;
+    color: var(--text-primary);
+    letter-spacing: -0.5px;
 }
 
 .auth-subtitle {
-    color: var(--muted);
-    margin: 0;
-    font-size: 15px;
-    font-weight: 600;
-}
-
-.auth-card .form { display: grid; gap: 18px; }
-
-.auth-card .form label {
-    display: grid;
-    gap: 8px;
-    font-weight: 800;
+    color: var(--text-muted);
     font-size: 14px;
-    color: var(--ink);
-}
-
-.auth-card .form input {
-    width: 100%;
-    min-height: 52px;
-    padding: 12px 18px;
-    border: var(--border);
-    border-radius: var(--radius-sm);
-    background: var(--card);
-    color: var(--ink);
-    font-size: 16px;
-    font-family: inherit;
-    transition: var(--transition);
-}
-
-.auth-card .form input:focus {
-    outline: none;
-    border-color: var(--yellow);
-    box-shadow: 0 0 0 4px rgba(245, 200, 66, 0.3);
-    transform: translateY(-1px);
 }
 
 .auth-footer {
     text-align: center;
-    color: var(--muted);
-    font-size: 13px;
-    margin: 24px 0 0;
+    color: var(--text-muted);
+    font-size: 12px;
+    margin-top: 28px;
     padding-top: 20px;
-    border-top: 2px dashed var(--line);
+    border-top: 1px solid var(--border-color);
 }
 
 /* =====================================================
    RESPONSIVE
 ===================================================== */
+.mobile-toggle {
+    display: none;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius);
+    background: transparent;
+    color: var(--text-primary);
+    align-items: center;
+    justify-content: center;
+}
+
 @media (max-width: 900px) {
-    .app-shell { grid-template-columns: 1fr; }
+    .app-shell {
+        grid-template-columns: 1fr;
+    }
 
     .app-sidebar {
         position: fixed;
-        top: 70px;
+        top: 0;
         inset-inline-start: 0;
-        width: 280px;
-        height: calc(100vh - 70px);
+        width: 260px;
+        height: 100vh;
         transform: translateX(100%);
-        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: transform 250ms cubic-bezier(0.4, 0, 0.2, 1);
         z-index: 100;
-        border-inline-end: var(--border);
-        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.2);
+        border-inline-end: 1px solid var(--border-color);
     }
 
     body.sidebar-open .app-sidebar {
@@ -379,10 +329,10 @@ html[data-theme="dark"] .app-header {
     body.sidebar-open::after {
         content: '';
         position: fixed;
-        inset: 70px 0 0 0;
-        background: rgba(0, 0, 0, 0.5);
+        inset: 0;
+        background: rgba(0, 0, 0, 0.4);
         z-index: 99;
-        animation: fadeIn 0.3s;
+        animation: fadeIn 200ms;
     }
 
     @keyframes fadeIn {
@@ -390,22 +340,24 @@ html[data-theme="dark"] .app-header {
         to { opacity: 1; }
     }
 
-    .menu-toggle { display: inline-block; }
+    .mobile-toggle {
+        display: flex;
+    }
 
-    .app-main { padding: 20px 16px 80px; }
-    .app-header-inner { padding: 10px 16px; gap: 8px; }
+    .app-topbar {
+        padding: 10px 16px;
+    }
 
-    .app-user > span:first-child { display: none; }
+    .app-main {
+        padding: 20px 16px 80px;
+    }
 
-    .app-logo { font-size: 15px; }
-    .app-logo::before { width: 36px; height: 36px; font-size: 20px; }
+    .page-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
 
-    .logout-text { display: none; }
-}
-
-@media (max-width: 480px) {
-    .auth-card { padding: 28px 22px 24px; }
-    .auth-logo { width: 72px; height: 72px; font-size: 36px; }
-    .auth-header h1 { font-size: 22px; }
-    .theme-toggle { width: 40px; height: 40px; font-size: 18px; }
+    .page-header-actions {
+        width: 100%;
+    }
 }

@@ -139,7 +139,23 @@ if ('serviceWorker' in navigator && location.protocol === 'https:') {
             .catch(err => console.warn('SW failed:', err));
     });
 }
+/* ============================================================
+   Header Shadow on Scroll
+============================================================ */
+(function initHeaderScroll() {
+    const header = document.querySelector('.app-header');
+    if (!header) return;
 
+    let lastScroll = 0;
+    
+    function onScroll() {
+        const scrolled = window.scrollY > 8;
+        header.classList.toggle('scrolled', scrolled);
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+})();
 /* ============================================================
    Exports
 ============================================================ */

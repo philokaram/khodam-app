@@ -85,31 +85,35 @@ $excusedDash = ($excusedPct / 100) * $circumference;
 </form>
 
 <!-- KPI Cards -->
-<div class="kpi-grid stagger">
-    <div class="kpi kpi-purple" data-icon="👥">
-        <div class="kpi-icon-wrap">👥</div>
-        <b><?= (int)$stats['total_servants'] ?></b>
-        <small>إجمالي الخدام</small>
+<div class="kpi-grid">
+    <div class="kpi kpi-primary">
+        <div class="kpi-icon">👥</div>
+        <div class="kpi-label">إجمالي الخدام</div>
+        <div class="kpi-value"><?= (int)$stats['total_servants'] ?></div>
     </div>
-    <div class="kpi kpi-green" data-icon="✅">
-        <div class="kpi-icon-wrap">✅</div>
-        <b><?= (int)$stats['present'] ?></b>
-        <small>الحضور</small>
+
+    <div class="kpi kpi-success">
+        <div class="kpi-icon">✓</div>
+        <div class="kpi-label">الحضور</div>
+        <div class="kpi-value"><?= (int)$stats['present'] ?></div>
     </div>
-    <div class="kpi kpi-red" data-icon="❌">
-        <div class="kpi-icon-wrap">❌</div>
-        <b><?= (int)$stats['absent'] ?></b>
-        <small>الغياب</small>
+
+    <div class="kpi kpi-danger">
+        <div class="kpi-icon">✕</div>
+        <div class="kpi-label">الغياب</div>
+        <div class="kpi-value"><?= (int)$stats['absent'] ?></div>
     </div>
-    <div class="kpi kpi-sky" data-icon="📝">
-        <div class="kpi-icon-wrap">📝</div>
-        <b><?= (int)$stats['excused'] ?></b>
-        <small>الغياب بعذر</small>
+
+    <div class="kpi kpi-info">
+        <div class="kpi-icon">⏱</div>
+        <div class="kpi-label">الغياب بعذر</div>
+        <div class="kpi-value"><?= (int)$stats['excused'] ?></div>
     </div>
-    <div class="kpi kpi-yellow" data-icon="📊">
-        <div class="kpi-icon-wrap">📊</div>
-        <b><?= e(formatPercent((float)$stats['rate'])) ?></b>
-        <small>نسبة الحضور</small>
+
+    <div class="kpi kpi-warning">
+        <div class="kpi-icon">%</div>
+        <div class="kpi-label">نسبة الحضور</div>
+        <div class="kpi-value"><?= e(formatPercent((float)$stats['rate'])) ?></div>
     </div>
 </div>
 
