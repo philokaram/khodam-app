@@ -130,4 +130,14 @@ CREATE TABLE audit_logs (
     INDEX idx_audit_created (created_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 ALTER TABLE servants ADD COLUMN emoji VARCHAR(8) DEFAULT '👤' AFTER name;
+UPDATE servants SET emoji = CASE (id % 8)
+    WHEN 0 THEN '😎'
+    WHEN 1 THEN '😀'
+    WHEN 2 THEN '🥳'
+    WHEN 3 THEN '🤓'
+    WHEN 4 THEN '😇'
+    WHEN 5 THEN '🙂'
+    WHEN 6 THEN '😄'
+    ELSE '😊'
+END WHERE emoji = '👤' OR emoji IS NULL;
 SET FOREIGN_KEY_CHECKS = 1;

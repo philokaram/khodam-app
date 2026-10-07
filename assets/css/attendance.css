@@ -1,50 +1,275 @@
+/* ============ Attendance Header ============ */
+.attendance-header {
+    background: linear-gradient(135deg, var(--yellow) 0%, var(--orange) 100%);
+    border: var(--border);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+    color: #0E3B34;
+}
+
+.attendance-header h1 {
+    margin: 0 0 6px;
+    font-size: 24px;
+    font-weight: 900;
+}
+
+.attendance-header .session-info {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    font-size: 14px;
+    font-weight: 700;
+    margin-top: 8px;
+}
+
+.attendance-header .session-info span {
+    background: rgba(255, 255, 255, 0.4);
+    padding: 4px 12px;
+    border-radius: 99px;
+    border: 1px solid rgba(14, 59, 52, 0.2);
+}
+
+/* ============ Toolbar ============ */
 .attendance-toolbar {
     display: flex;
-    gap: 12px;
+    gap: 10px;
     flex-wrap: wrap;
-    margin-bottom: 14px;
+    margin-bottom: 16px;
     align-items: center;
 }
-.search-input { flex: 1 1 220px; }
 
+.search-input {
+    flex: 1 1 220px;
+    min-height: 48px;
+    padding: 10px 18px;
+    border: var(--border);
+    border-radius: var(--radius);
+    background: var(--card);
+    color: var(--ink);
+    font-size: 15px;
+    font-weight: 600;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--yellow);
+    box-shadow: 0 0 0 4px rgba(255, 210, 63, 0.3), var(--shadow-sm);
+}
+
+/* ============ Attendance List ============ */
 .attendance-list {
     display: grid;
     gap: 12px;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
 }
+
 .attendance-row {
     background: var(--card);
     border: var(--border);
     border-radius: var(--radius);
-    padding: 12px 14px;
-    box-shadow: var(--shadow);
+    padding: 16px 18px;
+    box-shadow: var(--shadow-sm);
     display: grid;
-    gap: 10px;
+    gap: 12px;
+    transition: var(--transition);
+    animation: slideUp 0.3s ease-out;
 }
-.servant-name { font-weight: 900; font-size: 17px; }
-.status-group { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.attendance-row:hover {
+    box-shadow: var(--shadow);
+}
+
+.attendance-row.status-present { background: linear-gradient(90deg, #E0F9E8 0%, var(--card) 100%); }
+.attendance-row.status-absent { background: linear-gradient(90deg, #FFE5E8 0%, var(--card) 100%); }
+.attendance-row.status-excused { background: linear-gradient(90deg, #FFF8DC 0%, var(--card) 100%); }
+
+.attendance-row .row-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.attendance-row .avatar {
+    width: 48px;
+    height: 48px;
+    font-size: 24px;
+    border: var(--border-soft);
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--yellow);
+    flex-shrink: 0;
+}
+
+.servant-name {
+    font-weight: 900;
+    font-size: 17px;
+    color: var(--ink);
+    flex: 1;
+}
+
+/* ============ Status Buttons ============ */
+.status-group {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
 .status-btn {
-    flex: 1 1 auto;
-    min-width: 90px;
-    min-height: 44px;
+    min-height: 52px;
     border: var(--border);
     border-radius: var(--radius-sm);
     background: var(--card);
     font-weight: 800;
-    color: #0E3B34;
-    transition: transform .08s;
+    font-size: 15px;
+    color: var(--ink);
+    transition: var(--transition);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 12px;
+    box-shadow: var(--shadow-sm);
 }
-.status-btn:active { transform: scale(.97); }
-.status-btn.on.present { background: var(--green); }
-.status-btn.on.absent  { background: var(--red); color: #fff; }
-.status-btn.on.excused { background: var(--yellow); }
+
+.status-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+}
+
+.status-btn:active {
+    transform: translateY(2px);
+    box-shadow: none;
+}
+
+.status-btn.on.present {
+    background: linear-gradient(135deg, var(--green) 0%, #16A34A 100%);
+    color: #fff;
+    box-shadow: 3px 3px 0 #0E3B34;
+}
+
+.status-btn.on.absent {
+    background: linear-gradient(135deg, var(--red) 0%, #DC2626 100%);
+    color: #fff;
+    box-shadow: 3px 3px 0 #0E3B34;
+}
+
+.status-btn.on.excused {
+    background: linear-gradient(135deg, var(--yellow) 0%, var(--orange) 100%);
+    color: #0E3B34;
+    box-shadow: 3px 3px 0 #0E3B34;
+}
+
+/* Emojis in status buttons */
+.status-btn[data-status="present"]::before { content: '✓'; font-weight: 900; }
+.status-btn[data-status="absent"]::before  { content: '✕'; font-weight: 900; }
+.status-btn[data-status="excused"]::before { content: '⏱'; font-weight: 900; }
+
+.status-btn.on[data-status="present"]::before { content: '✓'; }
+.status-btn.on[data-status="absent"]::before  { content: '✕'; }
+.status-btn.on[data-status="excused"]::before { content: '⏱'; }
+
+/* ============ Excuse Box ============ */
+.excuse-box {
+    animation: slideDown 0.3s ease-out;
+}
+
 .excuse-box input {
     width: 100%;
-    min-height: 42px;
-    padding: 8px 12px;
+    min-height: 46px;
+    padding: 10px 16px;
     border: var(--border);
     border-radius: var(--radius-sm);
-    background: #FFFCEB;
+    background: #FFFEF5;
+    color: var(--ink);
+    font-size: 15px;
+    font-weight: 600;
 }
-.row-error { outline: 3px solid var(--red); }
-.attendance-actions { position: sticky; bottom: 12px; }
+
+.excuse-box input:focus {
+    outline: none;
+    border-color: var(--yellow);
+    box-shadow: 0 0 0 4px rgba(255, 210, 63, 0.3);
+}
+
+/* ============ Actions Bar ============ */
+.attendance-actions {
+    position: sticky;
+    bottom: 12px;
+    z-index: 10;
+    background: var(--card);
+    border: var(--border);
+    border-radius: var(--radius);
+    padding: 12px;
+    box-shadow: var(--shadow-lg);
+    margin-top: 20px;
+}
+
+.attendance-actions .btn {
+    width: 100%;
+    min-height: 54px;
+    font-size: 18px;
+    font-weight: 900;
+}
+
+.attendance-actions .btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+/* ============ Row Error ============ */
+.row-error {
+    border-color: var(--red) !important;
+    animation: shake 0.4s;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+}
+
+/* ============ Counter Badge ============ */
+.attendance-counter {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+
+.counter-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: var(--card);
+    border: var(--border);
+    border-radius: 99px;
+    font-weight: 800;
+    font-size: 14px;
+    box-shadow: var(--shadow-sm);
+}
+
+.counter-chip.present { background: var(--green); color: #fff; }
+.counter-chip.absent  { background: var(--red); color: #fff; }
+.counter-chip.excused { background: var(--yellow); color: #0E3B34; }
+
+/* ============ Responsive ============ */
+@media (max-width: 640px) {
+    .attendance-row { padding: 14px 14px; }
+    .servant-name { font-size: 16px; }
+    .status-btn { min-height: 48px; font-size: 14px; }
+    .status-btn[data-status="present"]::before,
+    .status-btn[data-status="absent"]::before,
+    .status-btn[data-status="excused"]::before {
+        font-size: 16px;
+    }
+    .attendance-header h1 { font-size: 20px; }
+    .counter-chip { font-size: 13px; padding: 6px 12px; }
+}

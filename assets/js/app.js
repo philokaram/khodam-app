@@ -4,83 +4,22 @@
    Toast notifications
 ============================================================ */
 function toast(message, type = 'success') {
+    // احذف أي toast قديم
+    document.querySelectorAll('.toast').forEach(t => t.remove());
+    
     const el = document.createElement('div');
     el.className = `toast toast-${type}`;
     el.textContent = message;
     document.body.appendChild(el);
-    setTimeout(() => el.remove(), 4000);
+    setTimeout(() => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(-20px)';
+        setTimeout(() => el.remove(), 300);
+    }, 3500);
 }
 
 /* ============================================================
-   API helper مركزية
-============================================================ */
-async function api(url, options = {}) {
-    const opts = {
-        method: options.method || 'GET',
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest',
-            ...(options.headers || {}),
-        },
-        credentials: 'same-origin',
-    };
-    if (options.body) {
-        if (options.body instanceof FormData) {
-            opts.body = options.body;
-        } else {
-            opts.headers['Content-Type'] = 'application/json';
-            opts.body = JSON.stringify(options.body);
-        }
-    }
-    const csrf = document.querySelector('input[name="_csrf_token"]');
-    if (csrf && opts.method !== 'GET') {
-        opts.headers['X-CSRF-Token'] = csrf.value;
-    }
-    const res = await fetch(url, opts);
-    let data;
-    try { data = await res.json(); } catch { data = { ok: false, message: 'خطأ غير متوقع' }; }
-    if (!res.ok) {
-        const err = new Error(data.message || 'حدث خطأ');
-        err.data = data;
-        err.status = res.status;
-        throw err;
-    }
-    return data;
-}
-
-window.api = api;
-window.toast = toast;
-
-/* ============================================================
-   Auto-dismiss existing toasts
-============================================================ */
-document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('[data-auto-dismiss]').forEach(el => {
-        const t = parseInt(el.dataset.autoDismiss, 10) || 4000;
-        setTimeout(() => el.remove(), t);
-    });
-});
-
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register((window.APP_URL || '') + '/sw.js')
-            .catch(err => console.warn('SW registration failed', err));
-    });
-}
-
-/* ============================================================
-   كشف الاتصال بالإنترنت
-============================================================ */
-window.isOnline = () => navigator.onLine;
-
-window.addEventListener('online',  () => {
-    toast('تم استعادة الاتصال بالإنترنت', 'success');
-});
-window.addEventListener('offline', () => {
-    toast('انقطع الاتصال بالإنترنت. لا يمكن حفظ الحضور الآن.', 'error');
-});
-
-/* ============================================================
-   API helper - يرفض الطلب عند عدم الاتصال
+   API helper مركزي
 ============================================================ */
 async function api(url, options = {}) {
     if (!navigator.onLine) {
@@ -108,7 +47,6 @@ async function api(url, options = {}) {
         }
     }
 
-    // CSRF من meta tag
     const meta = document.querySelector('meta[name="csrf-token"]');
     if (meta && opts.method !== 'GET') {
         opts.headers['X-CSRF-Token'] = meta.content;
@@ -117,10 +55,8 @@ async function api(url, options = {}) {
     let res;
     try {
         res = await fetch(url, opts);
-    } catch (networkErr) {
-        const err = new Error('فشل الاتصال بالخادم. تحقق من الإنترنت.');
-        err.network = true;
-        throw err;
+    } catch (e) {
+        throw new Error('فشل الاتصال بالخادم');
     }
 
     let payload = null;
@@ -141,5 +77,72 @@ async function api(url, options = {}) {
     return payload;
 }
 
+/* ============================================================
+   Theme Toggle
+============================================================ */
+(function initTheme() {
+    const saved = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const theme = saved || (prefersDark ? 'dark' : 'light');
+    
+    document.documentElement.setAttribute('data-theme', theme);
+})();
+
+function updateThemeButton(theme) {
+    const btn = document.querySelector('.theme-toggle');
+    if (btn) {
+        btn.textContent = theme === 'dark' ? '☀️' : '🌙';
+    }
+}
+
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme') || 'light';
+    const next = current === 'dark' ? 'light' : 'dark';
+    
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+    updateThemeButton(next);
+    
+    if (typeof toast === 'function') {
+        toast(next === 'dark' ? '🌙 الوضع الليلي' : '☀️ الوضع النهاري', 'info');
+    }
+}
+
+/* ============================================================
+   Auto-dismiss existing toasts
+============================================================ */
+document.addEventListener('DOMContentLoaded', () => {
+    // حدّث زر الثيم
+    const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+    updateThemeButton(currentTheme);
+    
+    // auto-dismiss
+    document.querySelectorAll('[data-auto-dismiss]').forEach(el => {
+        const t = parseInt(el.dataset.autoDismiss, 10) || 4000;
+        setTimeout(() => el.remove(), t);
+    });
+});
+
+/* ============================================================
+   Online / Offline
+============================================================ */
+window.addEventListener('online',  () => toast('✅ تم استعادة الاتصال', 'success'));
+window.addEventListener('offline', () => toast('⚠️ انقطع الاتصال', 'error'));
+
+/* ============================================================
+   Service Worker
+============================================================ */
+if ('serviceWorker' in navigator && location.protocol === 'https:') {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js', { scope: '/' })
+            .then(reg => console.log('✅ SW registered:', reg.scope))
+            .catch(err => console.warn('SW failed:', err));
+    });
+}
+
+/* ============================================================
+   Exports
+============================================================ */
 window.api = api;
 window.toast = toast;
+window.toggleTheme = toggleTheme;

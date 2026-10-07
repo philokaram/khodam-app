@@ -1,58 +1,143 @@
-:root {
-    /* ألوان النظام */
-    --bg: #F0F7F4;
-    --bg-alt: #E6F4EF;
+/* =====================================================
+   LIGHT THEME — ألوان ناعمة ومتناسقة
+===================================================== */
+:root,
+html[data-theme="light"] {
+    --bg: #F4F1EA;
+    --bg-alt: #EBE6DB;
+    --bg-elevated: #FFFFFF;
+    
     --card: #FFFFFF;
-    --ink: #0E3B34;
-    --ink-soft: #1A5248;
-    --muted: #6B8A82;
-    --muted-light: #A8C2BC;
-    --line: #D4E4DF;
-
-    /* ألوان الحالات */
-    --orange: #FF7A3D;
-    --yellow: #FFD23F;
-    --sky: #5CC8FF;
-    --pink: #FF8FB1;
-    --green: #2FCB84;
-    --red: #FF4D5E;
-    --purple: #A78BFA;
-
-    /* الظلال */
+    --card-hover: #FDFCF8;
+    
+    --ink: #1A2E2A;
+    --ink-soft: #2D4A42;
+    --muted: #6B7F78;
+    --muted-light: #A8B5AF;
+    --line: #E0DBD0;
+    
+    /* ألوان العلامة */
+    --yellow: #F5C842;
+    --yellow-soft: #FEF3D0;
+    --orange: #E8752F;
+    --orange-soft: #FEE4D4;
+    --green: #2BAE74;
+    --green-soft: #D4F0E2;
+    --red: #E84D5B;
+    --red-soft: #FCDDE0;
+    --sky: #3BA9E0;
+    --sky-soft: #D6ECF8;
+    --pink: #E67BA3;
+    --purple: #8B6FD4;
+    
+    /* تدرجات الخلفية */
+    --mesh-1: rgba(245, 200, 66, 0.35);
+    --mesh-2: rgba(59, 169, 224, 0.22);
+    --mesh-3: rgba(232, 117, 47, 0.18);
+    
+    /* الحدود والظلال */
+    --border: 2px solid var(--ink);
+    --border-soft: 1.5px solid var(--ink);
     --shadow: 4px 4px 0 var(--ink);
     --shadow-sm: 3px 3px 0 var(--ink);
     --shadow-lg: 6px 6px 0 var(--ink);
-    --shadow-hover: 6px 6px 0 var(--ink);
-
-    /* الحدود */
-    --border: 2px solid var(--ink);
-    --border-soft: 1.5px solid var(--ink);
-
+    
     /* الحواف */
     --radius-sm: 12px;
     --radius: 18px;
     --radius-lg: 24px;
-
-    /* الخط */
+    --radius-xl: 32px;
+    
     --font: 'Cairo', Tahoma, 'Segoe UI', sans-serif;
-
-    /* الانتقالات */
-    --transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Dark Mode (اختياري) */
-@media (prefers-color-scheme: dark) {
-    :root {
-        --bg: #0A1F1B;
-        --bg-alt: #0E2924;
-        --card: #12342D;
-        --ink: #EAF8F3;
-        --ink-soft: #B8DDD2;
-        --muted: #8FB8AD;
-        --muted-light: #5C7A70;
-        --line: #1F4A40;
-        --shadow: 4px 4px 0 #000;
-        --shadow-sm: 3px 3px 0 #000;
-        --shadow-lg: 6px 6px 0 #000;
-    }
+/* =====================================================
+   DARK THEME — ألوان دافئة ومريحة (ليست سوداء قاتمة)
+===================================================== */
+html[data-theme="dark"] {
+    --bg: #1A2420;
+    --bg-alt: #212E29;
+    --bg-elevated: #2A3833;
+    
+    --card: #2A3833;
+    --card-hover: #33443E;
+    
+    --ink: #F5EFE0;
+    --ink-soft: #D8CFB8;
+    --muted: #9BA89E;
+    --muted-light: #6B7A72;
+    --line: #3A4A43;
+    
+    /* ألوان ساطعة في الوضع الليلي */
+    --yellow: #FFD23F;
+    --yellow-soft: rgba(255, 210, 63, 0.15);
+    --orange: #FF8F4D;
+    --orange-soft: rgba(255, 143, 77, 0.15);
+    --green: #3FD992;
+    --green-soft: rgba(63, 217, 146, 0.15);
+    --red: #FF6371;
+    --red-soft: rgba(255, 99, 113, 0.15);
+    --sky: #5CC8FF;
+    --sky-soft: rgba(92, 200, 255, 0.15);
+    --pink: #FF8FB1;
+    --purple: #A78BFA;
+    
+    /* تدرجات الخلفية للوضع الليلي */
+    --mesh-1: rgba(255, 210, 63, 0.10);
+    --mesh-2: rgba(92, 200, 255, 0.08);
+    --mesh-3: rgba(255, 143, 77, 0.08);
+    
+    /* الحدود والظلال */
+    --border: 2px solid #F5EFE0;
+    --border-soft: 1.5px solid #7A8A82;
+    --shadow: 4px 4px 0 #000;
+    --shadow-sm: 3px 3px 0 #000;
+    --shadow-lg: 6px 6px 0 #000;
+}
+
+/* =====================================================
+   Body + Mesh Background
+===================================================== */
+* {
+    box-sizing: border-box;
+}
+
+html {
+    transition: background-color 0.4s ease;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    transition: background 0.4s ease, color 0.3s ease;
+    position: relative;
+}
+
+/* Mesh gradient قوي وواضح */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+        radial-gradient(ellipse 800px 600px at 10% 0%, var(--mesh-1) 0%, transparent 60%),
+        radial-gradient(ellipse 700px 700px at 90% 20%, var(--mesh-2) 0%, transparent 55%),
+        radial-gradient(ellipse 900px 500px at 50% 100%, var(--mesh-3) 0%, transparent 60%),
+        var(--bg);
+    transition: background 0.5s ease;
+}
+
+html[data-theme="dark"] body::before {
+    background:
+        radial-gradient(ellipse 800px 600px at 10% 0%, var(--mesh-1) 0%, transparent 55%),
+        radial-gradient(ellipse 700px 700px at 90% 20%, var(--mesh-2) 0%, transparent 50%),
+        radial-gradient(ellipse 900px 500px at 50% 100%, var(--mesh-3) 0%, transparent 55%),
+        var(--bg);
 }
