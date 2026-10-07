@@ -1,0 +1,105 @@
+/* ============ Forms ============ */
+.form { display: grid; gap: 16px; }
+
+.form label {
+    display: grid;
+    gap: 6px;
+    font-weight: 800;
+    font-size: 14px;
+    color: var(--ink);
+}
+
+.form input,
+.form select,
+.form textarea {
+    width: 100%;
+    min-height: 46px;
+    padding: 10px 16px;
+    border: var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--card);
+    color: var(--ink);
+    font-size: 15px;
+    transition: var(--transition);
+}
+
+.form input:focus,
+.form select:focus,
+.form textarea:focus {
+    outline: none;
+    border-color: var(--yellow);
+    box-shadow: 0 0 0 3px rgba(255, 210, 63, 0.25);
+}
+
+/* ============ Filters Bar ============ */
+.filters-bar {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    background: var(--card);
+    border: var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 24px;
+}
+
+.filters-bar label {
+    display: grid;
+    gap: 6px;
+    font-weight: 700;
+    font-size: 13px;
+    flex: 1 1 160px;
+    color: var(--ink);
+}
+
+.filters-bar label span {
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.filters-bar input,
+.filters-bar select {
+    width: 100%;
+    min-height: 42px;
+    padding: 8px 14px;
+    border: var(--border-soft);
+    border-radius: var(--radius-sm);
+    background: var(--card);
+    color: var(--ink);
+    font-size: 14px;
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.filters-bar input:focus,
+.filters-bar select:focus {
+    outline: none;
+    border-color: var(--yellow);
+    box-shadow: 0 0 0 3px rgba(255, 210, 63, 0.25);
+}
+
+/* ============ Form Box ============ */
+.form-box {
+    background: var(--card);
+    border: var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    padding: 28px;
+    max-width: 640px;
+    display: grid;
+    gap: 20px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+}
+
+.form-actions .btn { flex: 1; min-width: 120px; }

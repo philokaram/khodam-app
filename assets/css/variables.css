@@ -1,0 +1,58 @@
+:root {
+    /* ألوان النظام */
+    --bg: #F0F7F4;
+    --bg-alt: #E6F4EF;
+    --card: #FFFFFF;
+    --ink: #0E3B34;
+    --ink-soft: #1A5248;
+    --muted: #6B8A82;
+    --muted-light: #A8C2BC;
+    --line: #D4E4DF;
+
+    /* ألوان الحالات */
+    --orange: #FF7A3D;
+    --yellow: #FFD23F;
+    --sky: #5CC8FF;
+    --pink: #FF8FB1;
+    --green: #2FCB84;
+    --red: #FF4D5E;
+    --purple: #A78BFA;
+
+    /* الظلال */
+    --shadow: 4px 4px 0 var(--ink);
+    --shadow-sm: 3px 3px 0 var(--ink);
+    --shadow-lg: 6px 6px 0 var(--ink);
+    --shadow-hover: 6px 6px 0 var(--ink);
+
+    /* الحدود */
+    --border: 2px solid var(--ink);
+    --border-soft: 1.5px solid var(--ink);
+
+    /* الحواف */
+    --radius-sm: 12px;
+    --radius: 18px;
+    --radius-lg: 24px;
+
+    /* الخط */
+    --font: 'Cairo', Tahoma, 'Segoe UI', sans-serif;
+
+    /* الانتقالات */
+    --transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Dark Mode (اختياري) */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg: #0A1F1B;
+        --bg-alt: #0E2924;
+        --card: #12342D;
+        --ink: #EAF8F3;
+        --ink-soft: #B8DDD2;
+        --muted: #8FB8AD;
+        --muted-light: #5C7A70;
+        --line: #1F4A40;
+        --shadow: 4px 4px 0 #000;
+        --shadow-sm: 3px 3px 0 #000;
+        --shadow-lg: 6px 6px 0 #000;
+    }
+}

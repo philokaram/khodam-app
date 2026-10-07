@@ -1,0 +1,7 @@
+@media (max-width: 640px) {
+    .page-title { font-size: 22px; }
+    .filters-bar { padding: 12px; }
+    .filters-bar label { flex: 1 1 100%; }
+    .btn { padding: 10px 16px; }
+    .kpi b { font-size: 24px; }
+}

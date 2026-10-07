@@ -1,0 +1,91 @@
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+    margin-bottom: 28px;
+}
+
+.kpi {
+    position: relative;
+    background: var(--card);
+    border: var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px 22px;
+    box-shadow: var(--shadow);
+    color: #0E3B34;
+    overflow: hidden;
+    transition: var(--transition);
+    cursor: default;
+}
+
+.kpi:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.kpi::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.25);
+    transform: translate(30%, -30%);
+}
+
+.kpi b {
+    display: block;
+    font-size: 36px;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 8px;
+    position: relative;
+    z-index: 1;
+}
+
+.kpi small {
+    font-weight: 700;
+    font-size: 14px;
+    opacity: 0.9;
+    position: relative;
+    z-index: 1;
+}
+
+/* ألوان KPI */
+.kpi-yellow  { background: linear-gradient(135deg, #FFD23F 0%, #FFB800 100%); }
+.kpi-orange  { background: linear-gradient(135deg, #FF7A3D 0%, #FF5722 100%); }
+.kpi-sky     { background: linear-gradient(135deg, #5CC8FF 0%, #2196F3 100%); }
+.kpi-green   { background: linear-gradient(135deg, #2FCB84 0%, #16A34A 100%); }
+.kpi-red     { background: linear-gradient(135deg, #FF4D5E 0%, #DC2626 100%); color: #fff; }
+.kpi-pink    { background: linear-gradient(135deg, #FF8FB1 0%, #EC4899 100%); }
+.kpi-purple  { background: linear-gradient(135deg, #A78BFA 0%, #8B5CF6 100%); color: #fff; }
+
+/* KPI بأيقونة (شكل جديد) */
+.kpi-icon {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 20px;
+}
+
+.kpi-icon .icon {
+    width: 52px;
+    height: 52px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: var(--radius-sm);
+    display: grid;
+    place-items: center;
+    font-size: 26px;
+    flex-shrink: 0;
+}
+
+.kpi-icon .content b {
+    font-size: 30px;
+    margin-bottom: 2px;
+}
+
+.kpi-icon .content small {
+    font-size: 13px;
+}

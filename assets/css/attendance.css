@@ -1,0 +1,50 @@
+.attendance-toolbar {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+    align-items: center;
+}
+.search-input { flex: 1 1 220px; }
+
+.attendance-list {
+    display: grid;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+.attendance-row {
+    background: var(--card);
+    border: var(--border);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    box-shadow: var(--shadow);
+    display: grid;
+    gap: 10px;
+}
+.servant-name { font-weight: 900; font-size: 17px; }
+.status-group { display: flex; gap: 8px; flex-wrap: wrap; }
+.status-btn {
+    flex: 1 1 auto;
+    min-width: 90px;
+    min-height: 44px;
+    border: var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--card);
+    font-weight: 800;
+    color: #0E3B34;
+    transition: transform .08s;
+}
+.status-btn:active { transform: scale(.97); }
+.status-btn.on.present { background: var(--green); }
+.status-btn.on.absent  { background: var(--red); color: #fff; }
+.status-btn.on.excused { background: var(--yellow); }
+.excuse-box input {
+    width: 100%;
+    min-height: 42px;
+    padding: 8px 12px;
+    border: var(--border);
+    border-radius: var(--radius-sm);
+    background: #FFFCEB;
+}
+.row-error { outline: 3px solid var(--red); }
+.attendance-actions { position: sticky; bottom: 12px; }

@@ -1,0 +1,52 @@
+{
+  "id": "/",
+  "name": "نظام متابعة حضور الخدام",
+  "short_name": "حضور الخدام",
+  "description": "نظام متابعة حضور الخدام في الخُوَرَس والأنشطة اليومية والأسبوعية مع تقارير وإحصائيات",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "portrait",
+  "background_color": "#E6F4EF",
+  "theme_color": "#FFD23F",
+  "categories": ["productivity", "education"],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/icons/screenshot-mobile.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "لوحة التحكم على الجوال"
+    },
+    {
+      "src": "/icons/screenshot-desktop.png",
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "لوحة التحكم على الكمبيوتر"
+    }
+  ]
+}

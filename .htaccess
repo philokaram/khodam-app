@@ -1,0 +1,30 @@
+DirectoryIndex index.php
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # ✅ استثناءات صريحة — لا تحجبها
+    RewriteRule ^icons/ - [L]
+    RewriteRule ^manifest\.json$ - [L]
+    RewriteRule ^sw\.js$ - [L]
+    RewriteRule ^favicon\.ico$ - [L]
+    RewriteRule ^robots\.txt$ - [L]
+    RewriteRule ^assets/ - [L]
+
+    # منع الملفات المخفية
+    RewriteRule "(^|/)\.(?!well-known)" - [F,L]
+
+    # منع الملفات الحساسة
+    RewriteRule \.(env|sql|log|md|ini|lock|bak|sh|yml|yaml)$ - [F,L,NC]
+
+    # منع المجلدات الحساسة
+    RewriteRule ^(app|routes|storage|database|resources)/ - [F,L,NC]
+
+    # ملفات موجودة → مرّرها
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # الباقي → index.php
+    RewriteRule ^ index.php [QSA,L]
+</IfModule>
