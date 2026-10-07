@@ -46,7 +46,46 @@
     <button type="submit" class="btn btn-primary">تطبيق</button>
     <a href="<?= e(appBaseUrl()) ?>/reports" class="btn">إعادة تعيين</a>
 </form>
+<!-- أزرار التصدير -->
+<div class="export-actions" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;padding:16px;background:var(--bg-surface);border:1px solid var(--border-color);border-radius:var(--radius-lg)">
+    <div style="display:flex;align-items:center;gap:8px;flex:1;min-width:200px">
+        <span style="font-size:13px;font-weight:700;color:var(--text-muted)">تصدير Excel:</span>
+    </div>
 
+    <button type="button" class="btn" onclick="exportAttendance()">
+        📊 تقرير الحضور التفصيلي
+    </button>
+
+    <button type="button" class="btn" onclick="exportServantsStats()">
+        👥 إحصائيات الخدام
+    </button>
+
+    <button type="button" class="btn" onclick="exportActivitiesStats()">
+        📅 إحصائيات الأنشطة
+    </button>
+</div>
+
+<script>
+function buildQuery() {
+    var params = new URLSearchParams(window.location.search);
+    return params.toString();
+}
+
+function exportAttendance() {
+    var qs = buildQuery();
+    window.location.href = window.APP_URL + '/reports/export/attendance' + (qs ? '?' + qs : '');
+}
+
+function exportServantsStats() {
+    var qs = buildQuery();
+    window.location.href = window.APP_URL + '/reports/export/servants-stats' + (qs ? '?' + qs : '');
+}
+
+function exportActivitiesStats() {
+    var qs = buildQuery();
+    window.location.href = window.APP_URL + '/reports/export/activities-stats' + (qs ? '?' + qs : '');
+}
+</script>
 <div class="kpi-grid" style="margin-bottom:20px">
     <div class="kpi kpi-green">
         <b><?= (int)$stats['present'] ?></b>

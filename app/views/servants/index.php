@@ -3,13 +3,18 @@
         <h1><?= e(__('nav.servants')) ?></h1>
         <p>إدارة الخدام المسجلين في النظام</p>
     </div>
-    <div class="page-header-actions">
-        <?php if (hasPermission('servants.create')): ?>
-            <a href="<?= e(appBaseUrl()) ?>/servants/create" class="btn btn-primary">
-                + <?= e(__('servants.add')) ?>
-            </a>
-        <?php endif; ?>
-    </div>
+  <div class="page-header-actions">
+    <?php if (hasPermission('servants.view')): ?>
+        <button type="button" class="btn" onclick="exportServants()">
+            📥 تصدير Excel
+        </button>
+    <?php endif; ?>
+    <?php if (hasPermission('servants.create')): ?>
+        <a href="<?= e(appBaseUrl()) ?>/servants/create" class="btn btn-primary">
+            + <?= e(__('servants.add')) ?>
+        </a>
+    <?php endif; ?>
+</div>
 </div>
 
 <form method="get" class="filters-bar">
@@ -102,5 +107,10 @@ function deleteServant(id, name) {
                '⚠️ إذا كان للخادم سجل حضور سابق، <strong>سيتم تعطيله</strong> بدلاً من حذفه للحفاظ على البيانات التاريخية.' +
                '</div>'
     });
+}
+    
+    function exportServants() {
+    var params = new URLSearchParams(window.location.search);
+    window.location.href = window.APP_URL + '/servants/export' + (params.toString() ? '?' + params.toString() : '');
 }
 </script>

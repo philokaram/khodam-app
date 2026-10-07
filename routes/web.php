@@ -33,6 +33,7 @@ $webRoutes = [
         '/servants/create'     => ['ServantController', 'create'],
         '/servants/edit'       => ['ServantController', 'edit'],
         '/servants/show'       => ['ServantController', 'show'],
+        '/servants/export'     => ['ExportController', 'servants'],
 
         '/choirs'              => ['ChoirController', 'index'],
         '/choirs/create'       => ['ChoirController', 'create'],
@@ -48,6 +49,9 @@ $webRoutes = [
 
         '/reports'             => ['ReportController', 'index'],
         '/reports/servant'     => ['ReportController', 'servant'],
+        '/reports/export/attendance'        => ['ExportController', 'attendance'],
+    	'/reports/export/servants-stats'    => ['ExportController', 'servantsStats'],
+    	'/reports/export/activities-stats'  => ['ExportController', 'activitiesStats'],
 
         '/users'               => ['UserController', 'index'],
         '/users/create'        => ['UserController', 'create'],
