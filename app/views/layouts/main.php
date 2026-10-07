@@ -1,6 +1,7 @@
 <?php
 $base = appBaseUrl();
 $isAuth = $isAuth ?? false;
+$me = currentUser();
 ?>
 <!DOCTYPE html>
 <html lang="ar" dir="rtl" data-theme="light">
@@ -28,12 +29,10 @@ function toggleTheme() {
     var next = current === 'dark' ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', next);
     try { localStorage.setItem('theme', next); } catch(e) {}
-    
-    // حدّث الزر
-    var btn = document.querySelector('.theme-toggle');
+
+    var btn = document.querySelector('.theme-icon');
     if (btn) btn.textContent = next === 'dark' ? '☀️' : '🌙';
-    
-    // أطلق حدث مخصص
+
     window.dispatchEvent(new CustomEvent('themeChanged', { detail: { theme: next } }));
 }
 window.toggleTheme = toggleTheme;
@@ -68,21 +67,43 @@ window.toggleTheme = toggleTheme;
     <?php require APP_PATH . '/views/layouts/footer.php'; ?>
     <?php require APP_PATH . '/views/components/confirm-modal.php'; ?>
 
+    <!-- Onboarding — يظهر مرة واحدة فقط لكل مستخدم -->
+    <?php if ($me && !empty($me['onboarding_seen']) === false): ?>
+        <?php require APP_PATH . '/views/components/onboarding.php'; ?>
+    <?php endif; ?>
+
 <?php endif; ?>
+
 <script>
 window.APP_URL = <?= json_encode($base, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?>;
 
-// تأكد أن الزر يعرض الأيقونة الصحيحة عند التحميل
+// تأكد أن زر الثيم يعرض الأيقونة الصحيحة عند التحميل
 document.addEventListener('DOMContentLoaded', function() {
     var theme = document.documentElement.getAttribute('data-theme') || 'light';
-    var btn = document.querySelector('.theme-toggle');
+    var btn = document.querySelector('.theme-icon');
     if (btn) btn.textContent = theme === 'dark' ? '☀️' : '🌙';
 });
 </script>
-<script src="<?= e($base) ?>/assets/js/app.js" defer></script>
+
+<script src="<?= e($base) ?>/assets/js/app.js?v=<?= @filemtime(BASE_PATH . '/assets/js/app.js') ?: time() ?>"></script>
+<script src="<?= e($base) ?>/assets/js/tooltips.js?v=<?= @filemtime(BASE_PATH . '/assets/js/tooltips.js') ?: time() ?>" defer></script>
+
 <?php if (!empty($scripts)) foreach ($scripts as $s): ?>
-    <script src="<?= e($base) ?>/assets/js/<?= e($s) ?>" defer></script>
+    <script src="<?= e($base) ?>/assets/js/<?= e($s) ?>?v=<?= @filemtime(BASE_PATH . '/assets/js/' . $s) ?: time() ?>"></script>
 <?php endforeach; ?>
+
+<?php if (!$isAuth): ?>
+<script>
+if ('serviceWorker' in navigator && location.protocol === 'https:') {
+    window.addEventListener('load', function() {
+        navigator.serviceWorker
+            .register(window.APP_URL + '/sw.js', { scope: window.APP_URL + '/' })
+            .then(function(reg) { console.log('✅ SW registered:', reg.scope); })
+            .catch(function(err) { console.warn('SW failed:', err); });
+    });
+}
+</script>
+<?php endif; ?>
 
 </body>
 </html>

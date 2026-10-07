@@ -45,6 +45,9 @@ $apiRoutes = [
     	'/users/activate'        => ['UserApiController', 'activate'],
         
         '/profile/change-password' => ['ProfileApiController', 'changePassword'],
+        
+        '/users/onboarding-done'   => ['UserApiController', 'onboardingDone'],
+        '/users/onboarding-reset' => ['UserApiController', 'onboardingReset'],
     ],
     'GET' => [
         '/health'                    => ['HealthApiController', 'health'],

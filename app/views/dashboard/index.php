@@ -97,11 +97,12 @@ $excusedDash = ($excusedPct / 100) * $circumference;
 
 <!-- KPI Cards -->
 <div class="kpi-grid">
-    <div class="kpi kpi-primary">
-        <div class="kpi-icon">👥</div>
-        <div class="kpi-label">إجمالي الخدام</div>
-        <div class="kpi-value"><?= (int)$stats['total_servants'] ?></div>
-    </div>
+  <div class="kpi kpi-purple"
+     data-tooltip="إجمالي الخدام المسجلين في النظام">
+    <div class="kpi-icon">👥</div>
+    <div class="kpi-label">إجمالي الخدام</div>
+    <div class="kpi-value"><?= (int)$stats['total_servants'] ?></div>
+</div>
 
     <div class="kpi kpi-success">
         <div class="kpi-icon">✓</div>

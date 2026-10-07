@@ -230,5 +230,29 @@ FROM role_permissions rp
 JOIN permissions p ON p.id = rp.permission_id
 WHERE rp.role_id = 3
 ORDER BY p.name;
+-- أضف عمود onboarding_seen للمستخدمين
+ALTER TABLE users 
+ADD COLUMN onboarding_seen TINYINT(1) NOT NULL DEFAULT 0 AFTER status;
 
+-- أضف عمود tooltips_seen
+ALTER TABLE users 
+ADD COLUMN tooltips_enabled TINYINT(1) NOT NULL DEFAULT 1 AFTER onboarding_seen;
+
+-- تحقق
+SHOW COLUMNS FROM users LIKE '%onboarding%';
+SHOW COLUMNS FROM users LIKE '%tooltips%';
+
+-- احذف القديم إن وُجد وأضف الجديد
+ALTER TABLE users 
+DROP COLUMN IF EXISTS onboarding_seen,
+DROP COLUMN IF EXISTS tooltips_enabled;
+
+ALTER TABLE users 
+ADD COLUMN onboarding_step TINYINT UNSIGNED NOT NULL DEFAULT 0 AFTER status,
+ADD COLUMN tooltips_enabled TINYINT(1) NOT NULL DEFAULT 1 AFTER onboarding_step;
+
+-- 0 = لم يرَ، 1 = رأى، ... إلخ
+-- أو نستخدم:
+-- 0 = جديد (يحتاج جولة كاملة)
+-- 99 = أنهى الجولة
 SET FOREIGN_KEY_CHECKS = 1;

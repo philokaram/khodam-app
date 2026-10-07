@@ -285,4 +285,29 @@ class UserApiController
 
         return $e;
     }
+public function onboardingDone(): void
+{
+    apiRequirePost();
+    apiRequireLogin();
+    apiVerifyCsrf();
+
+    $me = currentUser();
+    Database::update('users', ['onboarding_step' => 99], 'id = ?', [(int)$me['id']]);
+    $_SESSION['user']['onboarding_step'] = 99;
+
+    apiSuccess(null, '');
+}
+
+public function onboardingReset(): void
+{
+    apiRequirePost();
+    apiRequireLogin();
+    apiVerifyCsrf();
+
+    $me = currentUser();
+    Database::update('users', ['onboarding_step' => 0], 'id = ?', [(int)$me['id']]);
+    $_SESSION['user']['onboarding_step'] = 0;
+
+    apiSuccess(null, '');
+}
 }

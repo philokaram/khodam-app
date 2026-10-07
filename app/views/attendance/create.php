@@ -34,9 +34,10 @@
         <input type="date" id="filterDate" value="<?= e($date) ?>" required>
     </label>
 
-    <button type="button" id="btnLoadServants" class="btn btn-primary">
-        عرض الخدام
-    </button>
+   <button type="button" id="btnLoadServants" class="btn btn-primary"
+        data-tooltip="اعرض قائمة خدام الخورس المختار">
+    عرض الخدام
+</button>
 </div>
 
 <!-- Session Info Bar -->

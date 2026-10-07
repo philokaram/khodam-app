@@ -11,18 +11,23 @@
     </div>
 <div class="page-header-actions">
     <?php if (hasPermission('servants.create')): ?>
-        <a href="<?= e(appBaseUrl()) ?>/servants/import" class="btn">
-            📥 استيراد من Excel
+        <a href="<?= e(appBaseUrl()) ?>/servants/import" class="btn"
+           data-tooltip="استيراد قائمة خدام من ملف Excel">
+            📥 استيراد
         </a>
     <?php endif; ?>
+
     <?php if (hasPermission('reports.export')): ?>
-        <button type="button" class="btn" onclick="exportServants()">
-            📤 تصدير Excel
+        <button type="button" class="btn" onclick="exportServants()"
+                data-tooltip="تصدير القائمة الحالية إلى Excel">
+            📤 تصدير
         </button>
     <?php endif; ?>
+
     <?php if (hasPermission('servants.create')): ?>
-        <a href="<?= e(appBaseUrl()) ?>/servants/create" class="btn btn-primary">
-            + <?= e(__('servants.add')) ?>
+        <a href="<?= e(appBaseUrl()) ?>/servants/create" class="btn btn-primary"
+           data-tooltip="إضافة خادم جديد — سيُولَّد له حساب دخول تلقائياً">
+            + إضافة خادم
         </a>
     <?php endif; ?>
 </div>

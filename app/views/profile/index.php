@@ -50,6 +50,34 @@
             🔑 تغيير كلمة المرور
         </button>
     </div>
+   <button type="button" class="btn" onclick="resetOnboarding()" style="width:100%;margin-top:10px">
+    🎓 إعادة عرض جولة الترحيب
+</button>
+
+<script>
+function resetOnboarding() {
+    var csrf = document.querySelector('meta[name="csrf-token"]').content;
+    fetch('/api/users/onboarding-reset', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-CSRF-Token': csrf
+        },
+        body: JSON.stringify({})
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(j) {
+        if (j.success) {
+            toast('✅ سيتم عرض الجولة الآن', 'success');
+            setTimeout(function() {
+                window.location.href = window.APP_URL + '/dashboard';
+            }, 800);
+        }
+    });
+}
+</script>
 </div>
 
 <!-- Modal -->
